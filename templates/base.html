@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    {% block head %}
+    <!--
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    -->
+    {% block title %}
+    {% endblock %}
+    
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+    <style>
+      body {
+        font-family: helvetica, sans-serif;
+        background-color: #B2BABC;
+      }
+
+      #navbar {
+        background-color: #F8FAF9;
+        border-radius: 10px;
+        height: 120px;
+        margin: 10px;
+      }
+    </style>
+
+    {% endblock %}
+  </head>
+  <body>
+    {% block body %}
+
+      <nav class="navbar" id="navbar">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <h5><b>STARP Primer Design</b></h5>
+            <button type="button" class="btn btn-primary btn-md" data-toggle="modal" data-target="#about_modal">About</button>
+            <button type="button" class="btn btn-success btn-md" data-toggle="modal" data-target="#cite_modal">Cite</button>
+            <button type="button" class="btn btn-warning btn-md" data-toggle="modal" data-target="#help_modal">Help</button>
+            <a href="/nestedloop" class="btn btn-primary">Nested Loop</a>
+            <a href="/starp" class="btn btn-primary">Starp</a>
+          </div>
+        </div>
+      </nav>
+
+      <div class="modal fade" id="about_modal" role="dialog">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">About</h4>
+            </div>
+            <div class="modal-body">
+              <p>This modal will contain information about this program.</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal fade" id="cite_modal" role="dialog">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">How to Cite</h4>
+            </div>
+            <div class="modal-body">
+              <p>This modal will contain information on how to cite this program.</p>
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal fade" id="help_modal" role="dialog">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Help</h4>
+            </div>
+            <div class="modal-body">
+              <p>This modal will contain help and troubleshooting information.</p>
+              <h5>Non-targets</h5>
+              <p>Some sequences may have repetitive regions throughout the genome. Due to these repeats,
+              it is undesirable to create primers in them since they will have multiple binding sites
+              during the PCR process. The non-targets box should contain BLAST data in XML format of the
+              other aligned sequences throughout the same genome.</p>
+              <h5>Using custom primers</h5>
+              <p>If you already have a primer you wish to use, you may specify it as a forward or reverse primer.
+                Keep in mind that the forward primers should be oriented 5'->3' on the <u>plus</u> strand, and the reverse
+                primers should be oriented 5'->3' on the <u>minus</u> strand.</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    {% endblock %}
+  </body>
+</html>

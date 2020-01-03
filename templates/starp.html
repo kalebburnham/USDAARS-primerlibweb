@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+
+{% block head %}
+    {% block title %}<title>STARP Primer Design</title>{% endblock %}
+    {{ super() }}
+    <style>
+        #form-wrapper {
+            width: 800px;
+            left: 0;
+            right: 0;
+            margin: auto;
+            background-color: #F8FAF9;
+            border-radius: 10px;
+            padding: 10px;
+            margin-top: 10px;
+        }
+
+        #snp_picker p {
+            font-family: monospace;
+        }
+
+        #snp_picker button:hover {
+            background-color: red !important;
+            transition: background-color .75s;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function() {
+            $("#snp_picker").modal('show');
+            $("#results").modal('show');
+        });
+    </script>
+{% endblock %}
+
+{% block body %}
+    {{ super() }}
+    <div class="container-fluid">
+        <div id="form-wrapper">
+
+            <form action="/starp" method="POST">
+                <p>{{ form.input_data(type="text", class="form-control", placeholder="Place SNP Sequence Here", rows='8', cols='80') }}</p>
+
+                {% if form.errors.items() %}
+                    <ul class="errors">
+                        {% for fieldName, errorMessages in form.errors.items() %}
+                            {% for error in errorMessages %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                
+                <p>{{ form.submit(class="btn btn-primary") }}</p>
+            </form>
+
+            
+        </div>
+
+        {% if snp_gui is defined %}
+        <div class="modal fade" id="snp_picker" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Choose a SNP</h2>
+                    </div>
+
+                    <div class="modal-body">
+                        <form action="/starp" method="POST">
+                            <div>{{ snp_gui|safe }}</div>
+                            <!-- Necessary to persist form data between requests. 
+                            This gives the appearance of AJAX updates while new
+                            templates are loaded. -->
+                            <div style="display: none">
+                                {{ form.input_data(rows='8', cols='80') }}
+                                {{ form.submit }}
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if starp is defined %}
+        <div class="modal fade" id="results" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Results</h2>
+                    </div>
+
+                    <div class="modal-body">
+                        <h4>Forward Primers</h4>
+                        <hr>
+                        <table>
+                            <tr>
+                                <th></th>
+                                <th><p>Sequence (5'->3')</p></th>
+                                <th><p>Length</p></th>
+                                <th><p>Tm</p></th>
+                                <th><p>GC%</p></th>
+                            </tr>
+                            <tr>
+                                <th><p>AMAS 1</p></th>
+                                <th><p>{{ starp.amas[0].sequence }}</p></th>
+                                <th><p>{{ starp.amas[0].__len__() }}</p></th>
+                            </tr>
+                            <tr>
+                                <th><p>AMAS 2</p></th>
+                                <th><p>{{ starp.amas[1].sequence }}</p></th>
+                                <th><p>{{ starp.amas[1].__len__() }}</p></th>
+                            </tr>
+
+                        </table>
+
+                        <h4>Reverse Primers</h4>
+                        <hr>
+                        {% for primer in starp.reverse_primers %}
+                            <p>{{ primer.rev_comp() }} Start: {{ primer.start }} End: {{ primer.end }}</p>
+                        {% endfor %}
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+{% endblock %}
