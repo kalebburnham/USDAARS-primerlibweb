@@ -34,10 +34,9 @@ def starp_post():
     if 'snp' in request.form:
         """ User has chosen their SNP. Compute primers. """
         chosen_snp_descriptor = request.form['snp']
-        snp = next((x for x in session['starp'].snps 
-            if x.descriptor == chosen_snp_descriptor), None)
+        session['starp'].set_snp(chosen_snp_descriptor)
         try:
-            session['starp'].choose_snp(snp)
+            session['starp'].run()
         except StarpError as e:
             form.errors['starp'] = [e.message]
             return render_template('starp.html', form=form)
@@ -46,7 +45,7 @@ def starp_post():
         """ User has submitted the initial data. Find the SNPS, and ask
         the user which one to design primers around. """
         try:
-            starp = Starp2(form.input_data.data)
+            starp = Starp(form.input_data.data)
             session['starp'] = starp
             snp_gui = starp.html()
         except StarpError as e:
