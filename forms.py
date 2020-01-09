@@ -3,7 +3,7 @@ from wtforms import TextAreaField, FloatField, BooleanField, IntegerField, Submi
 from wtforms import validators
 from wtforms.validators import InputRequired, Length, ValidationError, NumberRange
 
-from nestedloop.nestedloop import (TEMPERATURE_MIN, TEMPERATURE_MAX,
+from nestedloop import (TEMPERATURE_MIN, TEMPERATURE_MAX,
     NUM_TO_RETURN_MIN, PCR_MINIMUM, PCR_MAXIMUM, REF_SEQ_MIN_LENGTH,
     REF_SEQ_MAX_LENGTH, F_FROM_MIN, F_TO_MIN, R_FROM_MIN, R_TO_MIN)
 

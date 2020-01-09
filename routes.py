@@ -1,14 +1,15 @@
+import sys
+import os
+
 from flask import Flask, render_template, redirect, session, request
 from forms import StarpForm, NestedLoopForm
 from flask_session import Session
 
-import sys
-import os
-
-from starp.starp2 import Starp2
+from starp import Starp
 from starp.exceptions import StarpError
 
-from nestedloop.nestedloop import NestedLoop
+from nestedloop import NestedLoop
+from nestedloop import NestedLoopError
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(16)
