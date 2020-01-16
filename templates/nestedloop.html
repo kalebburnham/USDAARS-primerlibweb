@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 {% block head %}
-    {% block title %}<title>Nested Loop Primer Design</title>{% endblock %}
+    <title>Nested Loop Primer Design</title>
     {{ super() }}
     <style>
-        #nestedloop_form {
+      #nestedloop_form {
         width: 800px;
         left: 0;
         right: 0;
         margin: auto;
-        background-color: #F8FAF9;
+        background-color: #f8faf9;
         border-radius: 10px;
         padding: 10px;
         margin-top: 10px;
@@ -40,7 +40,7 @@
 
       #blast {
         width: 800px;
-        background-color: #F8FAF9;
+        background-color: #f8faf9;
         left: 0;
         right: 0;
         margin: auto;
@@ -56,10 +56,9 @@
       }
 
       #output_table {
-        background-color: #F8FAF9;
+        background-color: #f8faf9;
         border-radius: 10px;
         padding: 10px;
-
         left: 0;
         right: 0;
         margin: auto;
@@ -68,7 +67,7 @@
 
       #navigation {
         padding: 10px;
-        background-color: #F8FAF9;
+        background-color: #f8faf9;
         left: 0;
         right: 0;
         margin: auto;
@@ -84,7 +83,7 @@
       }
 
     </style>
-    
+
 <script>
 
     $(document).ready(function() {
@@ -189,7 +188,6 @@
 </script>
 {% endblock %}
 
-
 {% block body %}
   {{ super() }}
   <div class="container-fluid">
@@ -199,7 +197,7 @@
 
       <div class="form-group">
         <div class="input-group">
-          <button class="btn btn-info" id="upload_fasta_button" type="button" onclick="open_fasta_file()">Upload FASTA File</button> 
+          <button class="btn btn-info" id="upload_fasta_button" type="button" onclick="open_fasta_file()">Upload FASTA File</button>
           {{ form.ref_sequence(type="text", class="form-control", placeholder="Reference Sequence") }}
         </div>
       </div>
@@ -209,13 +207,14 @@
         <div id="non_target_div" style="display: none;">
           <a href="#blast">Need to perform a BLAST?</a>
           <div class="input-group">
-            <button class="btn btn-info" id="upload_xml_button" type="button" onclick="open_xml_file()">Upload XML File</button> 
+            <button class="btn btn-info" id="upload_xml_button" type="button" onclick="open_xml_file()">Upload XML File</button>
             {{ form.non_targets(class="form-control", rows='6', cols='80',
                 placeholder="Paste non-target BLAST data here in XML format. For more information, click the 'Help' tab above.") }}
           </div>
         </div>
       </div>
 
+      <!-- Data Input Form -->
       <table class="table" id="nestedloop_input_table">
         <tbody>
           <tr>
@@ -251,7 +250,7 @@
                   </div>
                 </div>
                 <div>
-                  <div>To</div> 
+                  <div>To</div>
                   <div class="input-group">
                     {{ form.r_to(class="form-control", id="rTo") }}
                     <div class="input-group-append">
@@ -327,8 +326,10 @@
 
       <br>
       </form>
+      <!-- End Input Form -->
     </div>
-  
+
+    <!-- Embedded Blast -->
     <div id="blast">
       <h2>BLAST</h2>
       Website
@@ -339,13 +340,12 @@
         <option value="atgsp">ATGSP</option>
       </select>
 
-      <br />
+      <br>
 
       <!-- Height is modified when the user picks a site. -->
       <iframe src="" height="0" id="embedded_blast"></iframe>
-
     </div>
-
+    <!-- End Embedded Blast -->
 
     <!-- This modal will automatically be opened if data is returned with the
       webpage. It contains the Primer Report table. -->
@@ -419,9 +419,6 @@
       </div>
     </div>
     {% endif %}
-
-    <div class="modal" id="loading"></div>
-
 
   </div>
 {% endblock %}

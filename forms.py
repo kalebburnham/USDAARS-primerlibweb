@@ -99,8 +99,7 @@ class NestedLoopForm(FlaskForm):
                                 message="Regions must be positive numbers.")],
         default=F_FROM_DEFAULT,
         render_kw={'type': 'number',
-                   'min': F_FROM_MIN,
-                   'required': 'true'}
+                   'min': F_FROM_MIN}
     )
 
     f_to = IntegerField(
@@ -110,8 +109,7 @@ class NestedLoopForm(FlaskForm):
                                 message="Regions must be positive numbers.")],
         default=F_TO_DEFAULT,
         render_kw={'type': 'number',
-                   'min': F_TO_MIN,
-                   'required': 'true'}
+                   'min': F_TO_MIN}
     )
 
     r_from = IntegerField(
@@ -121,8 +119,7 @@ class NestedLoopForm(FlaskForm):
                                 message="Regions must be positive numbers.")],
         default=R_FROM_DEFAULT,
         render_kw={'type': 'number',
-                   'min': R_FROM_MIN,
-                   'required': 'true'}
+                   'min': R_FROM_MIN}
     )
 
     r_to = IntegerField(
@@ -132,8 +129,7 @@ class NestedLoopForm(FlaskForm):
                                 message="Regions must be positive numbers.")],
         default=R_TO_DEFAULT,
         render_kw={'type': 'number',
-                   'min': R_TO_MIN,
-                   'required': 'true'}
+                   'min': R_TO_MIN}
     )
 
     tm_min = FloatField(
@@ -143,8 +139,7 @@ class NestedLoopForm(FlaskForm):
         render_kw={'type': 'number',
                    'step': 'any',
                    'min': TEMPERATURE_MIN,
-                   'max': TEMPERATURE_MAX,
-                   'required': 'true'}
+                   'max': TEMPERATURE_MAX}
     )
 
     tm_opt = FloatField(
@@ -154,8 +149,7 @@ class NestedLoopForm(FlaskForm):
         render_kw={'type': 'number',
                    'step': 'any',
                    'min': TEMPERATURE_MIN,
-                   'max': TEMPERATURE_MAX,
-                   'required': 'true'}
+                   'max': TEMPERATURE_MAX}
     )
 
     tm_max = FloatField(
@@ -165,8 +159,7 @@ class NestedLoopForm(FlaskForm):
         render_kw={'type': 'number',
                    'step': 'any',
                    'min': TEMPERATURE_MIN,
-                   'max': TEMPERATURE_MAX,
-                   'required': 'true'}
+                   'max': TEMPERATURE_MAX}
     )
 
     num_to_return = IntegerField(
@@ -176,8 +169,7 @@ class NestedLoopForm(FlaskForm):
                                 message=f'Must return at least {str(NUM_TO_RETURN_MIN)} primers!')],
         default=NUM_TO_RETURN_DEFAULT,
         render_kw={'type': 'number',
-                   'min': NUM_TO_RETURN_MIN,
-                   'required': 'true'}
+                   'min': NUM_TO_RETURN_MIN}
     )
 
     pcr_min = IntegerField(
@@ -185,8 +177,7 @@ class NestedLoopForm(FlaskForm):
         default=PCR_MIN_DEFAULT,
         render_kw={'type': 'number',
                    'min': PCR_MINIMUM,
-                   'max': PCR_MAXIMUM,
-                   'required': 'true'}
+                   'max': PCR_MAXIMUM}
     )
 
     pcr_max = IntegerField(
@@ -194,8 +185,7 @@ class NestedLoopForm(FlaskForm):
         default=PCR_MAX_DEFAULT,
         render_kw={'type': 'number',
                    'min': PCR_MINIMUM,
-                   'max': PCR_MAXIMUM,
-                   'required': 'true'}
+                   'max': PCR_MAXIMUM}
     )
 
     forward_primer = StringField(label='Forward Primer')

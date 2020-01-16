@@ -1,16 +1,14 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     {% block head %}
     <!--
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     -->
-    {% block title %}
-    {% endblock %}
-    
-    <meta charset="utf-8" />
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <meta charset="utf-8">
+    <meta http-equiv="Content-type" content="text/html;">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
@@ -35,6 +33,7 @@
   <body>
     {% block body %}
 
+      <!-- Navbar -->
       <nav class="navbar" id="navbar">
         <div class="container-fluid">
           <div class="navbar-header">
@@ -48,6 +47,7 @@
         </div>
       </nav>
 
+      <!-- About Modal -->
       <div class="modal fade" id="about_modal" role="dialog">
         <div class="modal-dialog">
           <div class="modal-content">
@@ -64,6 +64,7 @@
         </div>
       </div>
 
+      <!-- Citation Modal -->
       <div class="modal fade" id="cite_modal" role="dialog">
         <div class="modal-dialog">
           <div class="modal-content">
@@ -81,6 +82,7 @@
         </div>
       </div>
 
+      <!-- Help Modal. This may need to change depending on the program. -->
       <div class="modal fade" id="help_modal" role="dialog">
         <div class="modal-dialog">
           <div class="modal-content">
