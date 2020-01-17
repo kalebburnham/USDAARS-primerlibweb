@@ -97,63 +97,47 @@
 
           <div class="modal-body">
             <h4>Upstream AMAS Primers</h4>
-            <h4>Forward Primers</h4>
             <hr>
             <table>
-              <tr>
-                <th></th>
-                <th><p>Sequence (5'->3')</p></th>
-                <th><p>Length</p></th>
-                <th><p>Tm</p></th>
-                <th><p>GC%</p></th>
-              </tr>
-              <tr>
-                <th><p>AMAS 1</p></th>
-                <th><p>{{ starp.upstream.amas[0].sequence }}</p></th>
-                <th><p>{{ starp.upstream.amas[0].__len__() }}</p></th>
-              </tr>
-              <tr>
-                <th><p>AMAS 2</p></th>
-                <th><p>{{ starp.upstream.amas[1].sequence }}</p></th>
-                <th><p>{{ starp.upstream.amas[1].__len__() }}</p></th>
-              </tr>
-            </table>
+              <th>Name</th>
+              <th>Sequence</th>
 
-            <h4>Reverse Primers</h4>
-            <hr>
-            {% for primer in starp.upstream.rprimers %}
-              <p>{{ primer.rev_comp() }} Start: {{ primer.start }} End: {{ primer.end }}</p>
-            {% endfor %}
+              {% for pair in starp.upstream_pairs %}
+                <tr>
+                  <td><b>AMAS 1</b></td>
+                  <td>{{ pair[0][0].__repr__() }}</td>
+                </tr>
+                <tr>
+                  <td><b>AMAS 2</b></td>
+                  <td>{{ pair[0][1].__repr__() }}</td>
+                </tr>
+                <tr>
+                  <td><b>Reverse Primer</b></td>
+                  <td>{{ pair[1].__repr__() }}</td>
+                </tr>
+              {% endfor %}
+            </table>
 
             <h4>Downstream AMAS Primers</h4>
-            <h4>Forward Primers</h4>
             <hr>
-
             <table>
-              <tr>
-                <th></th>
-                <th><p>Sequence (5'->3')</p></th>
-                <th><p>Length</p></th>
-                <th><p>Tm</p></th>
-                <th><p>GC%</p></th>
-              </tr>
-              <tr>
-                <th><p>AMAS 1</p></th>
-                <th><p>{{ starp.downstream.amas[0].sequence }}</p></th>
-                <th><p>{{ starp.downstream.amas[0].__len__() }}</p></th>
-              </tr>
-              <tr>
-                <th><p>AMAS 2</p></th>
-                <th><p>{{ starp.downstream.amas[1].sequence }}</p></th>
-                <th><p>{{ starp.downstream.amas[1].__len__() }}</p></th>
-              </tr>
+              <th>Name</th>
+              <th>Sequence</th>
+              {% for pair in starp.downstream_pairs %}
+                <tr>
+                  <td><b>AMAS 1</b></td>
+                  <td>{{ pair[0][0].__repr__() }}</td>
+                </tr>
+                <tr>
+                  <td><b>AMAS 2</b></td>
+                  <td>{{ pair[0][1].__repr__() }}</td>
+                </tr>
+                <tr>
+                  <td><b>Reverse Primer</b></td>
+                  <td>{{ pair[1].__repr__() }}</td>
+                </tr>
+              {% endfor %}
             </table>
-
-            <h4>Reverse Primers</h4>
-            <hr>
-            {% for primer in starp.downstream.rprimers %}
-              <p>{{ primer.rev_comp() }} Start: {{ primer.start }} End: {{ primer.end }}</p>
-            {% endfor %}
           </div>
 
           <div class="modal-footer">
