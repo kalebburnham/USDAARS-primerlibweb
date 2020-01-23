@@ -1,0 +1,2 @@
+graft primerlibweb/templates
+global-exclude *.pyc

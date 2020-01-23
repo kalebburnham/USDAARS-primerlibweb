@@ -9,7 +9,7 @@ from starp.exceptions import StarpError
 from nestedloop import NestedLoop
 from nestedloop import NestedLoopError
 
-from flask import Flask, Response, render_template, redirect, session, request
+from flask import Flask, Response, render_template, redirect, session, request, jsonify, url_for
 from flask_session import Session
 
 from forms import StarpForm, NestedLoopForm
@@ -92,7 +92,7 @@ def create_pairs():
         #session['nl'].create_pairs()
     except NestedLoopError as e:
         form.errors["NL"] = [e.message]
-        return render_template('nestedloop.html', **locals())
+        return render_template('nestedloop.html', form=form)
 
     return render_template('nestedloop.html', form=form, pairs=session['nl'].pairs)
 

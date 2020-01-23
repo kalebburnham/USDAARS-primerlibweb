@@ -192,7 +192,7 @@
   {{ super() }}
   <div class="container-fluid">
     <div id="nestedloop_form">
-      <form action="/nestedloop" method="post" target="">
+      <form action="{{ url_for('run_nestedloop') }}" method="post" target="">
       {{ form.hidden_tag() }}
 
       <div class="form-group">
@@ -403,10 +403,10 @@
                 </tbody>
               </table>
               <div id="navigation">
-                <form action="/nestedloop">
+                <form action="{{ url_for('nestedloop') }}">
                   <button style="float: left;" class="btn btn-info">Perform a New Search</button>
                 </form>
-                <form action="/downloadCSV" target="_blank" >
+                <form action="{{ url_for('download_csv') }}" target="_blank" >
                   <button style="float: right;" class="btn btn-info">Download CSV File</button>
                 </form>
               </div>

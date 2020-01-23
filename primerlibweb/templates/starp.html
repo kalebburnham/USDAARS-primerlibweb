@@ -37,7 +37,7 @@
   {{ super() }}
   <div class="container-fluid">
     <div id="form-wrapper">
-      <form action="/starp" method="post">
+      <form action="{{ url_for('starp_post') }}" method="post">
         <p>{{ form.input_data(class="form-control", placeholder="Place SNP Sequence Here", rows='8', cols='80') }}</p>
 
         {% if form.errors.items() %}
@@ -65,7 +65,7 @@
           </div>
 
           <div class="modal-body">
-            <form action="/starp" method="post">
+            <form action="{{ url_for('starp_post') }}" method="post">
               <div>{{ snp_gui|safe }}</div>
               <!-- Necessary to persist form data between requests.
               This gives the appearance of AJAX updates while new
