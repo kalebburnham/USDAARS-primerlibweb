@@ -11,7 +11,6 @@ from nestedloop import NestedLoopError
 
 from flask import (Flask, Response, render_template, redirect, session,
                    request, jsonify, url_for)
-from flask_session import Session
 
 from .forms import StarpForm, NestedLoopForm
 
@@ -19,7 +18,7 @@ def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
-        SECRET_KEY='dev'
+        SECRET_KEY=os.urandom(16)
     )
     SESSION_TYPE = 'filesystem'
 
@@ -50,7 +49,8 @@ def create_app(test_config=None):
         if 'snp' in request.form:
             # User has chosen their SNP. Compute primers.
             chosen_snp_descriptor = request.form['snp']
-            starp = Starp(*session['starp'].values())
+            starp = Starp(form.input_data.data, form.non_targets.data)
+            #starp = Starp(*session['starp'].values())
             starp.set_snp(chosen_snp_descriptor)
 
             try:
@@ -65,7 +65,6 @@ def create_app(test_config=None):
         # user which one to design primers around.
         try:
             starp = Starp(form.input_data.data)
-            session['starp'] = {'sequence': form.input_data.data}
             snp_gui = starp.html()
         except StarpError as e:
             form.errors['starp'] = [e.message]

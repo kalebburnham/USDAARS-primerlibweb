@@ -23,6 +23,13 @@
       background-color: red !important;
       transition: background-color .75s;
     }
+
+    #upload_xml_button {
+        position: absolute;
+        z-index: 100;
+        top: 70%;
+        left: 78%;
+      }
   </style>
 
   <script>
@@ -30,6 +37,27 @@
       $("#snp_picker").modal('show');
       $("#results").modal('show');
     });
+
+    function get_file() {
+        var file = document.createElement("input");
+        file.setAttribute("type", "file");
+        file.click();
+        return file.files[0];
+    }
+
+    function open_xml_file() {
+        const reader = new FileReader();
+        var file = get_file();
+
+        if (file.name.endsWith(".xml")) {
+            reader.readAsText(file);
+            reader.onload = function(e) {
+                document.getElementById("non_targets").innerText = reader.result;
+            }
+        } else {
+            alert("Nontarget file must be in XML.");
+        }
+    }
   </script>
 {% endblock %}
 
@@ -39,6 +67,16 @@
     <div id="form-wrapper">
       <form action="{{ url_for('starp_post') }}" method="post">
         <p>{{ form.input_data(class="form-control", placeholder="Place SNP Sequence Here", rows='8', cols='80') }}</p>
+
+        <div class="form-group">
+          <div id="non_target_div">
+            <div class="input-group">
+              <button class="btn btn-info" id="upload_xml_button" type="button" onclick="open_xml_file()">Upload XML File</button>
+              {{ form.non_targets(class="form-control", rows='6', cols='80',
+                  placeholder="Paste non-target BLAST data here in XML format. For more information, click the 'Help' tab above.") }}
+            </div>
+          </div>
+        </div>
 
         {% if form.errors.items() %}
           <ul class="errors">

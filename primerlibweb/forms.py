@@ -22,6 +22,9 @@ class StarpForm(FlaskForm):
                            max=20000,
                            message='input_data must be between 50 and 20,000 characters.')]
     )
+
+    non_targets = TextAreaField(label='Non-specific alignments')
+
     submit = SubmitField('Submit')
 
 # DEFAULTS
