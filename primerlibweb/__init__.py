@@ -85,8 +85,9 @@ def create_app(test_config=None):
         if not form.validate_on_submit():
             return render_template('nestedloop.html', form=form)
         
-        session['nl'] = {'sequence': form.ref_sequence.data,
-                         'tm': (form.tm_min.data, form.tm_opt.data, form.tm_max.data),
+        # Sequence data may be too large to store as a session variable,
+        # so it cannot be included here.
+        session['nl'] = {'tm': (form.tm_min.data, form.tm_opt.data, form.tm_max.data),
                          'f_from': form.f_from.data,
                          'f_to': form.f_to.data,
                          'r_from': form.r_from.data,
@@ -98,21 +99,16 @@ def create_app(test_config=None):
                          'reverse_primer': form.reverse_primer.data,
                          'non_targets': form.non_targets.data}
 
-        nl = NestedLoop(*session['nl'].values())
+        nl = NestedLoop(form.ref_sequence.data, *session['nl'].values())
         
         try:
-            print('1')
             nl.run()
             #session['nl'].create_pairs()
         except NestedLoopError as e:
             form.errors["NL"] = [e.message]
             return render_template('nestedloop.html', form=form)
-        print('2')
 
-        pairs = nl.pairs
-        print('3')
-        print(pairs)
-        return render_template('nestedloop.html', form=form, pairs=pairs)
+        return render_template('nestedloop.html', form=form, pairs=nl.pairs)
 
     @app.route('/downloadCSV')
     def download_csv():
