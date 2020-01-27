@@ -11,7 +11,7 @@ from nestedloop import NestedLoopError
 
 from flask import Flask, Response, render_template, redirect, session, request, jsonify, url_for
 
-from forms import StarpForm, NestedLoopForm
+from primerlibweb.forms import StarpForm, NestedLoopForm
 
 app = Flask(__name__, template_folder='primerlibweb/templates')
 app.config['SECRET_KEY'] = os.urandom(16)
