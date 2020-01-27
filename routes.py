@@ -10,24 +10,22 @@ from nestedloop import NestedLoop
 from nestedloop import NestedLoopError
 
 from flask import Flask, Response, render_template, redirect, session, request, jsonify, url_for
-from flask_session import Session
 
 from forms import StarpForm, NestedLoopForm
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='primerlibweb/templates')
 app.config['SECRET_KEY'] = os.urandom(16)
 """ By default, a maximum 500 sessions are stored at once. """
 SESSION_TYPE = 'filesystem'
 app.config.from_object(__name__)
-Session(app)
 
 @app.route('/')
 def go_to_homepage():
     """ By default, send the user to the starp page. """
-    return redirect('/starp')
+    return redirect(url_for('starp'))
 
 @app.route('/starp')
-def show_form():
+def starp():
     """ Display the Starp form with default values. """
     form = StarpForm()
     return render_template('/starp.html', form=form)
@@ -42,19 +40,22 @@ def starp_post():
     if 'snp' in request.form:
         # User has chosen their SNP. Compute primers.
         chosen_snp_descriptor = request.form['snp']
-        session['starp'].set_snp(chosen_snp_descriptor)
+        starp = Starp(form.input_data.data, form.non_targets.data)
+        #starp = Starp(*session['starp'].values())
+        starp.set_snp(chosen_snp_descriptor)
+
         try:
-            session['starp'].run()
+            starp.run()
         except StarpError as e:
             form.errors['starp'] = [e.message]
             return render_template('starp.html', form=form)
-        return render_template('starp.html', form=form, starp=session['starp'])
+
+        return render_template('starp.html', form=form, starp=starp)
 
     # User has submitted the initial data. Find the SNPS, and ask the
     # user which one to design primers around.
     try:
         starp = Starp(form.input_data.data)
-        session['starp'] = starp
         snp_gui = starp.html()
     except StarpError as e:
         form.errors['starp'] = [e.message]
@@ -62,39 +63,42 @@ def starp_post():
     return render_template('starp.html', form=form, snp_gui=snp_gui)
 
 @app.route('/nestedloop')
-def go_to_nestedloop():
+def nestedloop():
     """ Display the Nested Loop form with default values. """
     form = NestedLoopForm()
     return render_template('/nestedloop.html', form=form)
 
 @app.route('/nestedloop', methods=['POST'])
-def create_pairs():
+def run_nestedloop():
     """ Compute primers based off the user's supplied information. """
     form = NestedLoopForm()
     if not form.validate_on_submit():
         return render_template('nestedloop.html', form=form)
+    
+    # Sequence data may be too large to store as a session variable,
+    # so it cannot be included here.
+    session['nl'] = {'tm': (form.tm_min.data, form.tm_opt.data, form.tm_max.data),
+                     'f_from': form.f_from.data,
+                     'f_to': form.f_to.data,
+                     'r_from': form.r_from.data,
+                     'r_to': form.r_to.data,
+                     'pcr_min': form.pcr_min.data,
+                     'pcr_max': form.pcr_max.data,
+                     'num_to_return': form.num_to_return.data,
+                     'forward_primer': form.forward_primer.data,
+                     'reverse_primer': form.reverse_primer.data,
+                     'non_targets': form.non_targets.data}
 
-    session['nl'] = NestedLoop(form.ref_sequence.data,
-                               (form.tm_min.data, form.tm_opt.data, form.tm_max.data),
-                               form.f_from.data,
-                               form.f_to.data,
-                               form.r_from.data,
-                               form.r_to.data,
-                               form.pcr_min.data,
-                               form.pcr_max.data,
-                               form.num_to_return.data,
-                               form.forward_primer.data,
-                               form.reverse_primer.data,
-                               form.non_targets.data)
-
+    nl = NestedLoop(form.ref_sequence.data, *session['nl'].values())
+    
     try:
-        session['nl'].run()
+        nl.run()
         #session['nl'].create_pairs()
     except NestedLoopError as e:
         form.errors["NL"] = [e.message]
         return render_template('nestedloop.html', form=form)
 
-    return render_template('nestedloop.html', form=form, pairs=session['nl'].pairs)
+    return render_template('nestedloop.html', form=form, pairs=nl.pairs)
 
 @app.route('/downloadCSV')
 def download_csv():
