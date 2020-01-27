@@ -1,1 +1,1 @@
-web: python routes.py runserver 0.0.0.0:5000
+web: gunicorn routes:app
