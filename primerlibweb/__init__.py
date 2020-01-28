@@ -95,10 +95,9 @@ def create_app(test_config=None):
                          'pcr_max': form.pcr_max.data,
                          'num_to_return': form.num_to_return.data,
                          'forward_primer': form.forward_primer.data,
-                         'reverse_primer': form.reverse_primer.data,
-                         'non_targets': form.non_targets.data}
+                         'reverse_primer': form.reverse_primer.data}
 
-        nl = NestedLoop(form.ref_sequence.data, *session['nl'].values())
+        nl = NestedLoop(form.ref_sequence.data, *session['nl'].values(), form.non_targets.data)
         
         try:
             nl.run()
