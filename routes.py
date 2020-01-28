@@ -15,7 +15,7 @@ from flask import Flask, Response, render_template, redirect, session, request, 
 from primerlibweb.forms import StarpForm, NestedLoopForm
 
 app = Flask(__name__, template_folder='primerlibweb/templates')
-app.secret_key = os.urandom(16)
+app.secret_key = 'OD jhfSD :FHFIOKL: NFEWnk448299'
 
 SESSION_TYPE = 'filesystem'
 app.config.from_object(__name__)
