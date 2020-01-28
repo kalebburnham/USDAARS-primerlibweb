@@ -3,3 +3,4 @@ Flask
 Flask-WTF
 WTForms
 gunicorn
+lxml
