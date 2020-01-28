@@ -3,6 +3,7 @@ License information goes here.
 """
 
 import os
+import json
 
 from starp import Starp
 from starp.exceptions import StarpError
@@ -14,8 +15,8 @@ from flask import Flask, Response, render_template, redirect, session, request, 
 from primerlibweb.forms import StarpForm, NestedLoopForm
 
 app = Flask(__name__, template_folder='primerlibweb/templates')
-app.config['SECRET_KEY'] = os.urandom(16)
-""" By default, a maximum 500 sessions are stored at once. """
+app.secret_key = os.urandom(16)
+
 SESSION_TYPE = 'filesystem'
 app.config.from_object(__name__)
 
@@ -51,9 +52,6 @@ def starp_post():
             return render_template('starp.html', form=form)
         except ValueError as e:
             form.errors['starp'] = [e.message]
-            return render_template('starp.html', form=form)
-        except Exception as e:
-            form.errors['starp'] = "Something went wrong. Please try again."
             return render_template('starp.html', form=form)
 
         return render_template('starp.html', form=form, starp=starp)
@@ -99,19 +97,16 @@ def run_nestedloop():
     try:
         nl.run()
         #session['nl'].create_pairs()
+        session['nl']['pairs'] = [pair.toJSON() for pair in nl.pairs]
     except NestedLoopError as e:
         form.errors["NL"] = [e.message]
         return render_template('nestedloop.html', form=form)
     except ValueError as e:
         form.errors["NL"] = [e.message]
         return render_template('nestedloop.html', form=form)
-    except Exception as e:
-        form.errors['starp'] = "Something went wrong. Please try again."
-        return render_template('starp.html', form=form)
-
     return render_template('nestedloop.html', form=form, pairs=nl.pairs)
 
-@app.route('/downloadCSV')
+@app.route('/downloadCSV', methods=['POST'])
 def download_csv():
     """ Send the user's results as a csv file. """
     nl = session['nl']
@@ -120,21 +115,23 @@ def download_csv():
            "Loop 2 Cycle Number\n")
     csv += "\n"
     pair_number = 1
-    for pair in nl.pairs:
-        pair_csv = (f'{str(pair_number)},Forward,{pair.forward_primer.sequence},'
-                    f'Plus,{str(pair.forward_primer.start)},'
-                    f'{str(pair.forward_primer.end)},'
-                    f'{str(pair.forward_primer.tm)},'
-                    f'{str(pair.forward_primer.gc)},'
-                    f'{str(pair.distance)},{pair.additive().additive},'
-                    + pair.additive().pcr_temperatures.replace("\n", " ") +
-                    f',{str(pair.additive().n)}' + '\n')
+    for pair in nl['pairs']:
 
-        pair_csv += (f',Reverse,{pair.reverse_primer.sequence},Minus,'
-                     f'{str(pair.reverse_primer.start)},'
-                     f'{str(pair.reverse_primer.end)},'
-                     f'{str(pair.reverse_primer.tm)},'
-                     f'{str(pair.reverse_primer.gc)}' + '\n\n')
+        pair_csv = (f'{str(pair_number)},Forward,{pair["forward_primer"]["sequence"]},'
+                        f'Plus,{str(pair["forward_primer"]["span"][0])},'
+                        f'{str(pair["forward_primer"]["span"][1])},'
+                        f'{str(pair["forward_primer"]["tm"])},'
+                        f'{str(pair["forward_primer"]["gc"])},'
+                        f'{str(pair["distance"])},{pair["additive"]},'
+                        + pair["pcr_temperatures"].replace("\n", " ") +
+                        f',{str(pair["n"])}' + '\n')
+
+        pair_csv += (f',Reverse,{pair["reverse_primer"]["sequence"]},Minus,'
+                     f'{str(pair["reverse_primer"]["span"][0])},'
+                     f'{str(pair["reverse_primer"]["span"][1])},'
+                     f'{str(pair["reverse_primer"]["tm"])},'
+                     f'{str(pair["reverse_primer"]["gc"])}' + '\n\n')
+        
 
         csv += pair_csv
         pair_number += 1

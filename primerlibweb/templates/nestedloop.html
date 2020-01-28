@@ -406,7 +406,7 @@
                 <form action="{{ url_for('nestedloop') }}">
                   <button style="float: left;" class="btn btn-info">Perform a New Search</button>
                 </form>
-                <form action="{{ url_for('download_csv') }}" target="_blank" >
+                <form action="{{ url_for('download_csv') }}" method="post" target="_blank" >
                   <button style="float: right;" class="btn btn-info">Download CSV File</button>
                 </form>
               </div>

@@ -58,6 +58,9 @@ def create_app(test_config=None):
             except StarpError as e:
                 form.errors['starp'] = [e.message]
                 return render_template('starp.html', form=form)
+            except ValueError as e:
+                form.errors['starp'] = [e.message]
+                return render_template('starp.html', form=form)
 
             return render_template('starp.html', form=form, starp=starp)
 
@@ -102,13 +105,16 @@ def create_app(test_config=None):
         try:
             nl.run()
             #session['nl'].create_pairs()
+            session['nl']['pairs'] = [pair.toJSON() for pair in nl.pairs]
         except NestedLoopError as e:
             form.errors["NL"] = [e.message]
             return render_template('nestedloop.html', form=form)
-
+        except ValueError as e:
+            form.errors["NL"] = [e.message]
+            return render_template('nestedloop.html', form=form)
         return render_template('nestedloop.html', form=form, pairs=nl.pairs)
 
-    @app.route('/downloadCSV')
+    @app.route('/downloadCSV', methods=['POST'])
     def download_csv():
         """ Send the user's results as a csv file. """
         nl = session['nl']
@@ -117,21 +123,23 @@ def create_app(test_config=None):
                "Loop 2 Cycle Number\n")
         csv += "\n"
         pair_number = 1
-        for pair in nl.pairs:
-            pair_csv = (f'{str(pair_number)},Forward,{pair.forward_primer.sequence},'
-                        f'Plus,{str(pair.forward_primer.start)},'
-                        f'{str(pair.forward_primer.end)},'
-                        f'{str(pair.forward_primer.tm)},'
-                        f'{str(pair.forward_primer.gc)},'
-                        f'{str(pair.distance)},{pair.additive().additive},'
-                        + pair.additive().pcr_temperatures.replace("\n", " ") +
-                        f',{str(pair.additive().n)}' + '\n')
+        for pair in nl['pairs']:
 
-            pair_csv += (f',Reverse,{pair.reverse_primer.sequence},Minus,'
-                         f'{str(pair.reverse_primer.start)},'
-                         f'{str(pair.reverse_primer.end)},'
-                         f'{str(pair.reverse_primer.tm)},'
-                         f'{str(pair.reverse_primer.gc)}' + '\n\n')
+            pair_csv = (f'{str(pair_number)},Forward,{pair["forward_primer"]["sequence"]},'
+                            f'Plus,{str(pair["forward_primer"]["span"][0])},'
+                            f'{str(pair["forward_primer"]["span"][1])},'
+                            f'{str(pair["forward_primer"]["tm"])},'
+                            f'{str(pair["forward_primer"]["gc"])},'
+                            f'{str(pair["distance"])},{pair["additive"]},'
+                            + pair["pcr_temperatures"].replace("\n", " ") +
+                            f',{str(pair["n"])}' + '\n')
+
+            pair_csv += (f',Reverse,{pair["reverse_primer"]["sequence"]},Minus,'
+                         f'{str(pair["reverse_primer"]["span"][0])},'
+                         f'{str(pair["reverse_primer"]["span"][1])},'
+                         f'{str(pair["reverse_primer"]["tm"])},'
+                         f'{str(pair["reverse_primer"]["gc"])}' + '\n\n')
+            
 
             csv += pair_csv
             pair_number += 1
