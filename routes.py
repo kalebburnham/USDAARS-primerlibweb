@@ -49,6 +49,12 @@ def starp_post():
         except StarpError as e:
             form.errors['starp'] = [e.message]
             return render_template('starp.html', form=form)
+        except ValueError as e:
+            form.errors['starp'] = [e.message]
+            return render_template('starp.html', form=form)
+        except Exception as e:
+            form.errors['starp'] = "Something went wrong. Please try again."
+            return render_template('starp.html', form=form)
 
         return render_template('starp.html', form=form, starp=starp)
 
@@ -96,6 +102,12 @@ def run_nestedloop():
     except NestedLoopError as e:
         form.errors["NL"] = [e.message]
         return render_template('nestedloop.html', form=form)
+    except ValueError as e:
+        form.errors["NL"] = [e.message]
+        return render_template('nestedloop.html', form=form)
+    except Exception as e:
+        form.errors['starp'] = "Something went wrong. Please try again."
+        return render_template('starp.html', form=form)
 
     return render_template('nestedloop.html', form=form, pairs=nl.pairs)
 
