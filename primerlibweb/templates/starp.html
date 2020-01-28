@@ -144,6 +144,7 @@
           </div>
 
           <div class="modal-body">
+            {% if starp.upstream_pairs %}
             <h4>Upstream AMAS Primers</h4>
             <hr>
             <table>
@@ -165,7 +166,9 @@
                 </tr>
               {% endfor %}
             </table>
+            {% endif %}
 
+            {% if starp.downstream_pairs %}
             <h4>Downstream AMAS Primers</h4>
             <hr>
             <table>
@@ -186,6 +189,7 @@
                 </tr>
               {% endfor %}
             </table>
+            {% endif %}
           </div>
 
           <div class="modal-footer">
