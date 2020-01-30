@@ -154,18 +154,25 @@
               {% for pair in starp.upstream_pairs %}
                 <tr>
                   <td><b>AMAS 1</b></td>
-                  <td>{{ pair[0][0].__repr__() }}</td>
+                  <td>
+                    {{ pair[0][0].tail }}<u>{{ pair[0][0].sequence }}</u>
+                  </td>
                 </tr>
                 <tr>
                   <td><b>AMAS 2</b></td>
-                  <td>{{ pair[0][1].__repr__() }}</td>
+                  <td>
+                    {{ pair[0][1].tail }}<u>{{ pair[0][1].sequence }}</u>
+                  </td>
                 </tr>
                 <tr>
                   <td><b>Reverse Primer</b></td>
-                  <td>{{ pair[1].__repr__() }}</td>
+                  <td>
+                    {{ pair[1].sequence }}
+                  </td>
                 </tr>
               {% endfor %}
             </table>
+            <br>
             {% endif %}
 
             {% if starp.downstream_pairs %}
@@ -177,15 +184,21 @@
               {% for pair in starp.downstream_pairs %}
                 <tr>
                   <td><b>AMAS 1</b></td>
-                  <td>{{ pair[0][0].__repr__() }}</td>
+                  <td>
+                    {{ pair[0][0].tail }}<u>{{ pair[0][0].sequence }}</u>
+                  </td>
                 </tr>
                 <tr>
                   <td><b>AMAS 2</b></td>
-                  <td>{{ pair[0][1].__repr__() }}</td>
+                  <td>
+                    {{ pair[0][1].tail }}<u>{{ pair[0][1].sequence }}</u>
+                  </td>
                 </tr>
                 <tr>
                   <td><b>Reverse Primer</b></td>
-                  <td>{{ pair[1].__repr__() }}</td>
+                  <td>
+                    {{ pair[1].sequence }}
+                  </td>
                 </tr>
               {% endfor %}
             </table>
