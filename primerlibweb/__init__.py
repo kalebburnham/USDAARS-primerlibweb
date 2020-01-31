@@ -51,15 +51,19 @@ def create_app(test_config=None):
             chosen_snp_descriptor = request.form['snp']
             starp = Starp(form.input_data.data, form.non_targets.data)
             #starp = Starp(*session['starp'].values())
-            starp.set_snp(chosen_snp_descriptor)
 
             try:
+                starp = Starp(form.input_data.data, form.non_targets.data)
+                starp.set_snp(chosen_snp_descriptor)
                 starp.run()
             except StarpError as e:
                 form.errors['starp'] = [e.message]
                 return render_template('starp.html', form=form)
             except ValueError as e:
-                form.errors['starp'] = [e.message]
+                form.errors['starp'] = [e]
+                return render_template('starp.html', form=form)
+            except Exception as e:
+                form.errors['starp'] = ['Something went wrong. Please try again.']
                 return render_template('starp.html', form=form)
 
             return render_template('starp.html', form=form, starp=starp)
@@ -72,6 +76,13 @@ def create_app(test_config=None):
         except StarpError as e:
             form.errors['starp'] = [e.message]
             return render_template('starp.html', form=form)
+        except ValueError as e:
+            form.errors['starp'] = [e]
+            return render_template('starp.html', form=form)
+        except Exception as e:
+            form.errors['starp'] = ['Something went wrong. Please try again.']
+            return render_template('starp.html', form=form)
+
         return render_template('starp.html', form=form, snp_gui=snp_gui)
 
     @app.route('/nestedloop')
@@ -110,8 +121,12 @@ def create_app(test_config=None):
             form.errors["NL"] = [e.message]
             return render_template('nestedloop.html', form=form)
         except ValueError as e:
-            form.errors["NL"] = [e.message]
+            form.errors["NL"] = [e]
             return render_template('nestedloop.html', form=form)
+        except Exception as e:
+            form.error["NL"] = ['Something went wrong. Please try again.']
+            return render_template('nestedloop.html', form=form)
+
         return render_template('nestedloop.html', form=form, pairs=nl.pairs)
 
     @app.route('/downloadCSV', methods=['POST'])
