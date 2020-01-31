@@ -135,13 +135,15 @@
         const reader = new FileReader();
         var file = get_file();
 
-        if (file.name.endsWith(".fasta")) {
+        allowedExtensions = /(\.fasta|\.fna|\.ffn|\.frn)$/i;
+
+        if (allowedExtensions.exec(file.name)) {
             reader.readAsText(file);
             reader.onload = function(e) {
                 document.getElementById("ref_sequence").innerText = reader.result;
             }
         } else {
-            alert("Uploaded reference sequences must be in FASTA format.");
+            alert('Allowed file extensions are .fasta, .fna, .ffn, or .frn.')
         }
     }
 
@@ -149,13 +151,15 @@
         const reader = new FileReader();
         var file = get_file();
 
-        if (file.name.endsWith(".xml")) {
+        allowedExtensions = /(\.xml)$/i;
+
+        if (allowedExtensions.exec(file.name)) {
             reader.readAsText(file);
             reader.onload = function(e) {
                 document.getElementById("non_targets").innerText = reader.result;
             }
         } else {
-            alert("Nontarget file must be in XML.");
+            alert("Allowed file extension is XML.");
         }
     }
 

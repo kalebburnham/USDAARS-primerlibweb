@@ -58,14 +58,16 @@
     function open_xml_file() {
         const reader = new FileReader();
         var file = get_file();
+        
+        allowedExtensions = /(\.xml)$/i;
 
-        if (file.name.endsWith(".xml")) {
+        if (allowedExtensions.exec(file.name)) {
             reader.readAsText(file);
             reader.onload = function(e) {
                 document.getElementById("non_targets").innerText = reader.result;
             }
         } else {
-            alert("Nontarget file must be in XML.");
+            alert("Allowed file extension is XML.");
         }
     }
   </script>
