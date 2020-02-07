@@ -152,24 +152,26 @@
             <table>
               <th>Name</th>
               <th>Sequence</th>
+              <th>Span</th>
 
               {% for pair in starp.upstream_pairs %}
                 <tr>
                   <td><b>AMAS 1</b></td>
-                  <td>
-                    {{ pair[0][0].__str__() }}
-                  </td>
+                  <td>{{ pair[0][0].__str__() }}</td>
+                  <td>{{ pair[0][0].span }}</td>
                 </tr>
                 <tr>
                   <td><b>AMAS 2</b></td>
-                  <td>
-                    {{ pair[0][1].__str__() }}
-                  </td>
+                  <td>{{ pair[0][1].__str__() }}</td>
+                  <td>{{ pair[0][1].span }}</td>
                 </tr>
                 <tr>
                   <td><b>Reverse Primer</b></td>
+                  <td>{{ pair[1].sequence }}</td>
                   <td>
-                    {{ pair[1].sequence }}
+                    Allele 1: {{ pair[1].allele1_span }}
+                    <br>
+                    Allele 2: {{ pair[1].allele2_span }}
                   </td>
                 </tr>
               {% endfor %}
@@ -186,20 +188,21 @@
               {% for pair in starp.downstream_pairs %}
                 <tr>
                   <td><b>AMAS 1</b></td>
-                  <td>
-                    {{ pair[0][0].__str__() }}
-                  </td>
+                  <td>{{ pair[0][0].__str__() }}</td>
+                  <td>{{ pair[0][0].span }}</td>
                 </tr>
                 <tr>
                   <td><b>AMAS 2</b></td>
-                  <td>
-                    {{ pair[0][1].__str__() }}
-                  </td>
+                  <td>{{ pair[0][1].__str__() }}</td>
+                  <td>{{ pair[0][1].span }}</td>
                 </tr>
                 <tr>
                   <td><b>Reverse Primer</b></td>
+                  <td>{{ pair[1].sequence }}</td>
                   <td>
-                    {{ pair[1].sequence }}
+                    Allele 1: {{ pair[1].allele1_span }}
+                    <br>
+                    Allele 2: {{ pair[1].allele2_span }}
                   </td>
                 </tr>
               {% endfor %}
