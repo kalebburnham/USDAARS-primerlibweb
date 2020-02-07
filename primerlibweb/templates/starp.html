@@ -34,6 +34,10 @@
       transition: background-color .75s;
     }
 
+    #xml_upload_div {
+      float: right;
+    }
+
     #upload_xml_button {
         position: absolute;
         z-index: 100;
@@ -48,26 +52,19 @@
       $("#results").modal('show');
     });
 
-    function get_file() {
-        var file = document.createElement("input");
-        file.setAttribute("type", "file");
-        file.click();
-        return file.files[0];
-    }
+    function update_nontargets() {
+      const reader = new FileReader();
+      var file = document.getElementById('xml_upload_input').files[0]
 
-    function open_xml_file() {
-        const reader = new FileReader();
-        var file = get_file();
-        
-        allowedExtensions = /(\.xml)$/i;
+      allowedExtensions = /(\.xml)$/i;
 
-        if (allowedExtensions.exec(file.name)) {
+      if (allowedExtensions.exec(file.name)) {
             reader.readAsText(file);
             reader.onload = function(e) {
                 document.getElementById("non_targets").innerText = reader.result;
             }
         } else {
-            alert("Allowed file extension is XML.");
+            alert("Allowed file extension is .xml.");
         }
     }
   </script>
@@ -83,9 +80,11 @@
         <div class="form-group">
           <div id="non_target_div">
             <div class="input-group">
-              <button class="btn btn-info" id="upload_xml_button" type="button" onclick="open_xml_file()">Upload XML File</button>
               {{ form.non_targets(class="form-control", rows='6', cols='80',
                   placeholder="Paste non-target BLAST data here in XML format. For more information, click the 'Help' tab above.") }}
+            </div>
+            <div id="xml_upload_div">
+              <input id="xml_upload_input" type="file" onchange="update_nontargets()">
             </div>
           </div>
         </div>
