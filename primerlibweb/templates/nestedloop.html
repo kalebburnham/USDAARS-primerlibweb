@@ -24,18 +24,8 @@
         height: 200px;
       }
 
-      #upload_fasta_button {
-        position: absolute;
-        z-index: 100;
-        top: 70%;
-        left: 76%;
-      }
-
-      #upload_xml_button {
-        position: absolute;
-        z-index: 100;
-        top: 70%;
-        left: 78%;
+      #fasta_upload_div, #xml_upload_div {
+        float: right;
       }
 
       #blast {
@@ -189,6 +179,38 @@
         }
     }
 
+    function update_reference_sequence() {
+      const reader = new FileReader();
+      var file = document.getElementById('fasta_upload_input').files[0]
+
+      allowedExtensions = /(\.fasta|\.fna|\.ffn|\.frn)$/i;
+
+      if (allowedExtensions.exec(file.name)) {
+        reader.readAsText(file);
+        reader.onload = function(e) {
+          document.getElementById("ref_sequence").innerText = reader.result;
+        }
+      } else {
+        alert('Allowed file extensions are .fasta, .fna, .ffn, or .frn.')
+      }
+    }
+
+    function update_nontargets() {
+      const reader = new FileReader();
+      var file = document.getElementById('xml_upload_input').files[0]
+
+      allowedExtensions = /(\.xml)$/i;
+
+      if (allowedExtensions.exec(file.name)) {
+        reader.readAsText(file);
+        reader.onload = function(e) {
+          document.getElementById("non_targets").innerText = reader.result;
+        }
+      } else {
+        alert("Allowed file extension is .xml.");
+      }
+    }
+
 </script>
 {% endblock %}
 
@@ -201,8 +223,10 @@
 
       <div class="form-group">
         <div class="input-group">
-          <button class="btn btn-info" id="upload_fasta_button" type="button" onclick="open_fasta_file()">Upload FASTA File</button>
           {{ form.ref_sequence(type="text", class="form-control", placeholder="Reference Sequence") }}
+        </div>
+        <div id="fasta_upload_div">
+          <input id="fasta_upload_input" type="file" onchange="update_reference_sequence()">
         </div>
       </div>
 
@@ -211,9 +235,11 @@
         <div id="non_target_div" style="display: none;">
           <a href="#blast">Need to perform a BLAST?</a>
           <div class="input-group">
-            <button class="btn btn-info" id="upload_xml_button" type="button" onclick="open_xml_file()">Upload XML File</button>
             {{ form.non_targets(class="form-control", rows='6', cols='80',
                 placeholder="Paste non-target BLAST data here in XML format. For more information, click the 'Help' tab above.") }}
+          </div>
+          <div id="xml_upload_div">
+            <input id="xml_upload_input" type="file" onchange="update_nontargets()">
           </div>
         </div>
       </div>
