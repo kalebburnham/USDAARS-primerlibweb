@@ -12,8 +12,6 @@ from nestedloop import NestedLoopError
 from flask import (Flask, Response, render_template, redirect, session,
                    request, jsonify, url_for)
 
-from .forms import StarpForm, NestedLoopForm
-
 def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
@@ -36,109 +34,138 @@ def create_app(test_config=None):
     @app.route('/starp')
     def starp():
         """ Display the Starp form with default values. """
-        form = StarpForm()
-        return render_template('/starp.html', form=form)
+        session.clear()
+        return render_template('/starp.html')
 
     @app.route('/starp', methods=['POST'])
     def starp_post():
         """ The user has submitted some action. If they've just clicked
         submit, move them to the next stage to select the SNP. If they've
         chosen the SNP, compute primers. """
-        form = StarpForm()
+        errors = []
 
         if 'snp' in request.form:
             # User has chosen their SNP. Compute primers.
             chosen_snp_descriptor = request.form['snp']
-            starp = Starp(form.input_data.data, form.non_targets.data)
+            starp = Starp(request.form['input_data'], request.form['non_targets'])
             #starp = Starp(*session['starp'].values())
 
             try:
-                starp = Starp(form.input_data.data, form.non_targets.data)
+                starp = Starp(request.form['input_data'], request.form['non_targets'])
                 starp.set_snp(chosen_snp_descriptor)
                 starp.run()
             except StarpError as e:
-                form.errors['starp'] = [e.message]
-                return render_template('starp.html', form=form)
+                errors.append(e.message)
+                return render_template('starp.html', errors=errors,
+                                       sequence_data=request.form['input_data'],
+                                       nontargets=request.form['nontargets'])
             except ValueError as e:
-                form.errors['starp'] = [e]
-                return render_template('starp.html', form=form)
-            except Exception as e:
-                form.errors['starp'] = ['Something went wrong. Please try again.']
-                return render_template('starp.html', form=form)
+                errors.append(e)
+                return render_template('starp.html', errors=errors,
+                                       sequence_data=request.form['input_data'],
+                                       nontargets=request.form['non_targets'])
 
-            return render_template('starp.html', form=form, starp=starp)
+            return render_template('starp.html',
+                                   sequence_data=request.form['input_data'],
+                                   nontargets=request.form['non_targets'],
+                                   starp=starp)
 
         # User has submitted the initial data. Find the SNPS, and ask the
         # user which one to design primers around.
         try:
-            starp = Starp(form.input_data.data)
+            starp = Starp(request.form['input_data'])
             snp_gui = starp.html()
         except StarpError as e:
-            form.errors['starp'] = [e.message]
-            return render_template('starp.html', form=form)
+            errors.append(e.message)
+            return render_template('starp.html', errors=errors,
+                                   sequence_data=request.form['input_data'],
+                                   nontargets=request.form['nontargets'])
         except ValueError as e:
-            form.errors['starp'] = [e]
-            return render_template('starp.html', form=form)
-        except Exception as e:
-            form.errors['starp'] = ['Something went wrong. Please try again.']
-            return render_template('starp.html', form=form)
+            errors.append(e)
+            return render_template('starp.html', errors=errors,
+                                   sequence_data=request.form['input_data'],
+                                   nontargets=request.form['non_targets'])
 
-        return render_template('starp.html', form=form, snp_gui=snp_gui)
+        return render_template('starp.html', errors=errors, snp_gui=snp_gui,
+                               sequence_data=request.form['input_data'],
+                               nontargets=request.form['non_targets'])
 
     @app.route('/nestedloop')
     def nestedloop():
         """ Display the Nested Loop form with default values. """
-        form = NestedLoopForm()
-        return render_template('/nestedloop.html', form=form)
+        session.clear()
+        return render_template('/nestedloop.html')
 
     @app.route('/nestedloop', methods=['POST'])
     def run_nestedloop():
         """ Compute primers based off the user's supplied information. """
-        form = NestedLoopForm()
-        if not form.validate_on_submit():
-            return render_template('nestedloop.html', form=form)
-        
+
+
         # Sequence data may be too large to store as a session variable,
         # so it cannot be included here.
-        session['nl'] = {'tm': (form.tm_min.data, form.tm_opt.data, form.tm_max.data),
-                         'f_from': form.f_from.data,
-                         'f_to': form.f_to.data,
-                         'r_from': form.r_from.data,
-                         'r_to': form.r_to.data,
-                         'pcr_min': form.pcr_min.data,
-                         'pcr_max': form.pcr_max.data,
-                         'num_to_return': form.num_to_return.data,
-                         'forward_primer': form.forward_primer.data,
-                         'reverse_primer': form.reverse_primer.data}
-
-        nl = NestedLoop(form.ref_sequence.data, *session['nl'].values(), form.non_targets.data)
+        session['tm'] = {'min': float(request.form['tm_min']),
+                         'opt': float(request.form['tm_opt']),
+                         'max': float(request.form['tm_max'])}
+        session['f_from'] = int(request.form['fFrom'])
+        session['f_to'] = int(request.form['fTo'])
+        session['r_from'] = int(request.form['rFrom'])
+        session['r_to'] = int(request.form['rTo'])
+        session['pcr_min'] = int(request.form['pcr_min'])
+        session['pcr_max'] = int(request.form['pcr_max'])
+        session['num_to_return'] = int(request.form['num_to_return'])
+        session['forward_primer'] = request.form['forward_primer']
+        session['reverse_primer'] = request.form['reverse_primer']
         
+        errors = []
         try:
+            nl = NestedLoop(ref_sequence=request.form['ref_sequence'],
+                        tm=(session['tm']['min'], session['tm']['opt'], session['tm']['max']),
+                        f_from=session['f_from'],
+                        f_to=session['f_to'],
+                        r_from=session['r_from'],
+                        r_to=session['r_to'],
+                        pcr_min=session['pcr_min'],
+                        pcr_max=session['pcr_max'],
+                        num_to_return=session['num_to_return'],
+                        custom_forward_primer=session['forward_primer'],
+                        custom_reverse_primer=session['reverse_primer'],
+                        nontargets=request.form['non_targets'])
+
             nl.run()
             #session['nl'].create_pairs()
-            session['nl']['pairs'] = [pair.toJSON() for pair in nl.pairs]
+            session['pairs'] = [pair.toJSON() for pair in nl.pairs]
         except NestedLoopError as e:
-            form.errors["NL"] = [e.message]
-            return render_template('nestedloop.html', form=form)
+            errors.append(e.message)
+            return render_template('nestedloop.html', session=session,
+                                   errors=errors, ref_sequence=request.form['ref_sequence'],
+                                   nontargets=request.form['non_targets'])
         except ValueError as e:
-            form.errors["NL"] = [e]
-            return render_template('nestedloop.html', form=form)
+            errors.append(e)
+            return render_template('nestedloop.html', session=session,
+                                   errors=errors, ref_sequence=request.form['ref_sequence'],
+                                   nontargets=request.form['non_targets'])
         except Exception as e:
-            form.error["NL"] = ['Something went wrong. Please try again.']
-            return render_template('nestedloop.html', form=form)
+            errors.append(e)
+            errors.append("Something went wrong. Please try again.")
+            return render_template('nestedloop.html', session=session,
+                                   errors=errors, ref_sequence=request.form['ref_sequence'],
+                                   nontargets=request.form['non_targets'])
 
-        return render_template('nestedloop.html', form=form, pairs=nl.pairs)
+        return render_template('nestedloop.html', session=session, 
+                               ref_sequence=request.form['ref_sequence'],
+                               nontargets=request.form['non_targets'],
+                               pairs=nl.pairs)
 
     @app.route('/downloadCSV', methods=['POST'])
     def download_csv():
         """ Send the user's results as a csv file. """
-        nl = session['nl']
+
         csv = ("#,Type,Sequence (5'->3'),Strand,Start,End,Tm (Celsius),"
                "GC Content,Amplicon Length,Additive,Loop 2 Program,"
                "Loop 2 Cycle Number\n")
         csv += "\n"
         pair_number = 1
-        for pair in nl['pairs']:
+        for pair in session['pairs']:
 
             pair_csv = (f'{str(pair_number)},Forward,{pair["forward_primer"]["sequence"]},'
                             f'Plus,{str(pair["forward_primer"]["span"][0])},'

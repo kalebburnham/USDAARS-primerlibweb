@@ -75,13 +75,14 @@
   <div class="container-fluid">
     <div id="form-wrapper">
       <form action="{{ url_for('starp_post') }}" method="post">
-        <p>{{ form.input_data(class="form-control", placeholder="Place SNP Sequence Here", rows='8', cols='80') }}</p>
+        <div>
+          <textarea name="input_data" class="form-control" id="input_data" required="" placeholder="Place SNP Sequence Here" rows="8" cols="80">{% if sequence_data %}{{ sequence_data }}{% endif %}</textarea>
+        </p>
 
         <div class="form-group">
           <div id="non_target_div">
             <div class="input-group">
-              {{ form.non_targets(class="form-control", rows='6', cols='80',
-                  placeholder="Paste non-target BLAST data here in XML format. For more information, click the 'Help' tab above.") }}
+              <textarea name="non_targets" class="form-control" id="non_targets" placeholder="Paste non-target BLAST data here in XML format. For more information, click the 'Help' tab above." rows="6" cols="80">{% if nontargets %}{{ nontargets }}{% endif %}</textarea>
             </div>
             <div id="xml_upload_div">
               <input id="xml_upload_input" type="file" onchange="update_nontargets()">
@@ -89,23 +90,22 @@
           </div>
         </div>
 
-        {% if form.errors.items() %}
+        {% if errors %}
           <ul class="errors">
-            {% for fieldName, errorMessages in form.errors.items() %}
-              {% for error in errorMessages %}
-                <li>{{ error }}</li>
-              {% endfor %}
+            {% for error in errors %}
+              <li>{{ error }}</li>
             {% endfor %}
           </ul>
         {% endif %}
-        <p>{{ form.submit(class="btn btn-primary") }}</p>
+
+        <input name="submit" class="btn btn-primary" id="submit" type="submit" value="Submit">
         <p style="color: red;">Note that large sequences with large nontarget data may cause the server to time out.</p>
       </form>
 
     </div>
 
-    <!-- SNP Picker Display -->
     {% if snp_gui is defined %}
+    <!-- SNP Picker Display -->
     <div class="modal fade" id="snp_picker" role="dialog">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -117,13 +117,8 @@
           <div class="modal-body">
             <form action="{{ url_for('starp_post') }}" method="post">
               <div>{{ snp_gui|safe }}</div>
-              <!-- Necessary to persist form data between requests.
-              This gives the appearance of AJAX updates while new
-              templates are loaded. -->
-              <div style="display: none">
-                {{ form.input_data(rows='8', cols='80') }}
-                {{ form.submit }}
-              </div>
+              <textarea style="display: none;" id="input_data" name="input_data">{{ sequence_data }}</textarea>
+              <textarea style="display: none;" id="non_targets" name="non_targets">{{ nontargets }}</textarea>
             </form>
           </div>
 
@@ -136,8 +131,8 @@
     </div>
     {% endif %}
 
-    <!-- Display Results -->
     {% if starp is defined %}
+    <!-- Display Results -->
     <div class="modal fade" id="results" role="dialog">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">

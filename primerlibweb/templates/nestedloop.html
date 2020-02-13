@@ -3,6 +3,16 @@
     <title>Nested Loop Primer Design</title>
     {{ super() }}
     <style>
+
+      input:valid {
+          color: green;
+      }
+
+      /* Unmatched */
+      input:invalid {
+          color: red;
+      }
+
       #nestedloop_form {
         width: 800px;
         left: 0;
@@ -75,6 +85,9 @@
     </style>
 
 <script>
+
+  const REFSEQ_MIN_LENGTH = 100;
+  const REFSEQ_MAX_LENGTH = 20000;
 
     $(document).ready(function() {
 
@@ -211,6 +224,87 @@
       }
     }
 
+    function validateForm() {
+      refsequenceField = document.getElementById('ref_sequence');
+      fFromField = document.getElementById('fFrom');
+      fToField = document.getElementById('fTo');
+      rFromField = document.getElementById('rFrom');
+      rToField = document.getElementById('rTo');
+      pcrMinField = document.getElementById('ampliconLengthMin');
+      pcrMaxField = document.getElementById('ampliconLengthMax');
+      tmMinField = document.getElementById('tmMin');
+      tmOptField = document.getElementById('tmOpt');
+      tmMaxField = document.getElementById('tmMax');
+
+      return (_validateRefsequence(refsequenceField) 
+              && _validateFSpan(fFromField, fToField)
+              && _validateRSpan(rFromField, rToField)
+              && _validateAmpliconLength(pcrMinField, pcrMaxField)
+              && _validateMeltingTemperatures(tmMinField, tmOptField, tmMaxField));
+    }
+    
+
+  function _validateRefsequence(refsequenceField) {
+    len = refsequenceField.value.length;
+
+    if (len < REFSEQ_MIN_LENGTH || len > REFSEQ_MAX_LENGTH) {
+      // Check the sequence is between min and max characters.
+      refsequenceField.setCustomValidity("Reference sequence must contain between " + REFSEQ_MIN_LENGTH + " and " + REFSEQ_MAX_LENGTH + " characters.");
+      return false;
+    } else {
+      refsequenceField.setCustomValidity("");
+      return true
+    }
+    
+  }
+
+  function _validateFSpan(fFromField, fToField) {
+    if (parseInt(fToField.value) <= parseInt(fFromField.value)) {
+      console.log(parseInt(fToField.value));
+      console.log(parseInt(fFromField.value));
+      fToField.setCustomValidity("'To' region of F primer must be larger than 'From'.");
+      return false;
+    } else {
+      console.log('clearing');
+      fToField.setCustomValidity("");
+      return true;
+    }
+  }
+
+  function _validateRSpan(rFromField, rToField) {
+    if (parseInt(rToField.value) <= parseInt(rFromField.value)) {
+      rToField.setCustomValidity("'To' region of R primer must be larger than 'From'.");
+      return false;
+    } else {
+      rToField.setCustomValidity("");
+      return true;
+    }
+  }
+
+  function _validateAmpliconLength(pcrMinField, pcrMaxField) {
+    if (parseInt(pcrMaxField.value) <= parseInt(pcrMinField.value)) {
+      pcrMaxField.setCustomValidity("Maximum amplicon length must be larger than the minimum.")
+      return false;
+    } else {
+      pcrMaxField.setCustomValidity("");
+      return true;
+    }
+  }
+
+  function _validateMeltingTemperatures(tmMinField, tmOptField, tmMaxField) {
+    tmMin = parseInt(tmMinField.value);
+    tmOpt = parseInt(tmOptField.value);
+    tmMax = parseInt(tmMaxField.value);
+
+    if (tmOpt < tmMin || tmOpt > tmMax) {
+      tmMaxField.setCustomValidity("Incorrect ordering of temperatures.");
+      return false;
+    } else {
+      tmMaxField.setCustomValidity("");
+      return true;
+    }
+  }
+
 </script>
 {% endblock %}
 
@@ -218,12 +312,11 @@
   {{ super() }}
   <div class="container-fluid">
     <div id="nestedloop_form">
-      <form action="{{ url_for('run_nestedloop') }}" method="post" target="">
-      {{ form.csrf_token }}
+      <form action="{{ url_for('run_nestedloop') }}" method="post" target="" onsubmit="return validateForm()">
 
       <div class="form-group">
         <div class="input-group">
-          {{ form.ref_sequence(type="text", class="form-control", placeholder="Reference Sequence") }}
+          <textarea name="ref_sequence" class="form-control" id="ref_sequence" maxlength="20000" placeholder="Reference Sequence" type="text" onchange="validateForm()" value="{{ ref_sequence }}">{% if ref_sequence %}{{ ref_sequence }}{% endif %}</textarea>
         </div>
         <div id="fasta_upload_div">
           <input id="fasta_upload_input" type="file" onchange="update_reference_sequence()">
@@ -235,8 +328,7 @@
         <div id="non_target_div" style="display: none;">
           <a href="#blast">Need to perform a BLAST?</a>
           <div class="input-group">
-            {{ form.non_targets(class="form-control", rows='6', cols='80',
-                placeholder="Paste non-target BLAST data here in XML format. For more information, click the 'Help' tab above.") }}
+            <textarea name="non_targets" class="form-control" id="non_targets" placeholder="Paste non-target BLAST data here in XML format. For more information, click the 'Help' tab above." rows="6" cols="80" onchange="validateForm()">{% if nontargets %}{{ nontargets }}{% endif %}</textarea>
           </div>
           <div id="xml_upload_div">
             <input id="xml_upload_input" type="file" onchange="update_nontargets()">
@@ -254,13 +346,21 @@
                 <div style="padding-right: 1em">
                   <div>From</div>
                   <div>
-                    {{ form.f_from(class="form-control", id="fFrom") }}
+                    {% if session %}
+                      <input name="fFrom" class="form-control" id="fFrom" required="true" type="number" min="1" value="{{ session['f_from'] }}">
+                    {% else %}
+                      <input name="fFrom" class="form-control" id="fFrom" required="true" type="number" min="1" value="1">
+                    {% endif %}
                   </div>
                 </div>
                 <div>
                   <div>To</div>
                   <div class="input-group">
-                    {{ form.f_to(class="form-control", id="fTo") }}
+                    {% if session %}
+                      <input name="fTo" class="form-control" id="fTo" required="" type="number" min="1" onchange="validateForm()" value="{{ session['f_to'] }}">
+                    {% else %}
+                      <input name="fTo" class="form-control" id="fTo" required="" type="number" min="1" value="1" onchange="validateForm()">
+                    {% endif %}
                     <div class="input-group-append">
                       <button class="input-group-text btn" type="button" onclick="populate_with_length('fTo')">Max</button>
                     </div>
@@ -276,13 +376,21 @@
                 <div style="padding-right: 1em">
                   <div>From</div>
                   <div>
-                    {{ form.r_from(class="form-control", id="rFrom") }}
+                    {% if session %}
+                      <input name="rFrom" class="form-control" id="rFrom" required="" type="number" min="1" value="{{ session['r_from'] }}" onchange="validateForm()">
+                    {% else %}
+                      <input name="rFrom" class="form-control" id="rFrom" required="" type="number" min="1" value="1" onchange="validateForm()">
+                    {% endif %}
                   </div>
                 </div>
                 <div>
                   <div>To</div>
                   <div class="input-group">
-                    {{ form.r_to(class="form-control", id="rTo") }}
+                    {% if session %}
+                      <input name="rTo" class="form-control" id="rTo" required="" type="number" min="1" value="{{ session['r_to'] }}" onchange="validateForm()">
+                    {% else %}
+                      <input name="rTo" class="form-control" id="rTo" required="" type="number" min="1" value="1" onchange="validateForm()">
+                    {% endif %}
                     <div class="input-group-append">
                       <button class="input-group-text btn" type="button" onclick="populate_with_length('rTo')">Max</button>
                     </div>
@@ -296,63 +404,93 @@
             <td>
               <div class="container" style="display: flex; flex-direction: row; padding-left: 0;">
                 <div style="padding-right: 1em">
-                  Minimum {{ form.pcr_min(class="form-control", id="ampliconLengthMin") }}
+                  {% if session %}
+                    Minimum <input name="pcr_min" class="form-control" id="ampliconLengthMin" type="number" min="1" max="20000" value="{{ session['pcr_min'] }}" onchange="validateForm()">
+                  {% else %}
+                    Minimum <input name="pcr_min" class="form-control" id="ampliconLengthMin" type="number" min="1" max="20000" value="3000" onchange="validateForm()">
+                  {% endif %}
                 </div>
                 <div>
-                  Maximum {{ form.pcr_max(class="form-control", id="ampliconLengthMax") }}
+                  {% if session %}
+                    Maximum <input name="pcr_max" class="form-control" id="ampliconLengthMax" type="number" min="1" max="20000" value="{{ session['pcr_max'] }}" onchange="validateForm()">
+                  {% else %}
+                    Maximum <input name="pcr_max" class="form-control" id="ampliconLengthMax" type="number" min="1" max="20000" value="8000" onchange="validateForm()">
+                  {% endif %}
                 </div>
               </div>
             </td>
           </tr>
           <tr>
             <td>Number of Pairs to Return</td>
-            <td>{{ form.num_to_return(class="form-control", style="width: 4rem") }}</td>
+            <td>
+              {% if session %}
+                <input name="num_to_return" class="form-control" id="num_to_return" style="width: 4rem" required="" type="number" min="1" value="{{ session['num_to_return'] }}" onchange="validateForm()">
+              {% else %}
+                <input name="num_to_return" class="form-control" id="num_to_return" style="width: 4rem" required="" type="number" min="1" value="5" onchange="validateForm()">
+              {% endif %}
+            </td>
           </tr>
           <tr>
             <td>Melting Temperature</td>
             <td>
               <div class="container" style="display: flex; flex-direction: row; padding-left: 0;">
                 <div style="padding-right: 1em">
-                  Minimum {{ form.tm_min(class="form-control", id="tmMin", style="width: 4rem") }}
+                  {% if session %}
+                    Minimum <input name="tm_min" class="form-control" id="tmMin" style="width: 4rem" required type="number" min="35.0" max="72.5" step="any" value="{{ session['tm']['min'] }}" onchange="validateForm()">
+                  {% else %}
+                    Minimum <input name="tm_min" class="form-control" id="tmMin" style="width: 4rem" required type="number" min="35.0" max="72.5" step="any" value="54.0" onchange="validateForm()">
+                  {% endif %}
                 </div>
                 <div style="padding-right: 1em">
-                  Optimum {{ form.tm_opt(class="form-control", id="tmOpt", style="width: 4rem") }}
+                  {% if session %}
+                    Optimum <input name="tm_opt" class="form-control" id="tmOpt" style="width: 4rem" required type="number" min="35.0" max="72.5" step="any" value="{{ session['tm']['opt'] }}" onchange="validateForm()">
+                  {% else %}
+                    Optimum <input name="tm_opt" class="form-control" id="tmOpt" style="width: 4rem" required type="number" min="35.0" max="72.5" step="any" value="56.0" onchange="validateForm()">
+                  {% endif %}
                 </div>
                 <div>
-                  Maximum {{ form.tm_max(class="form-control", id="tmMax", style="width: 4rem") }}
+                  {% if session %}
+                    Maximum <input name="tm_max" class="form-control" id="tmMax" style="width: 4rem" required type="number" min="35.0" max="72.5" step="any" value="{{ session['tm']['max'] }}" onchange="validateForm()">
+                  {% else %}
+                    Maximum <input name="tm_max" class="form-control" id="tmMax" style="width: 4rem" required type="number" min="35.0" max="72.5" step="any" value="58.0" onchange="validateForm()">
+                  {% endif %}
                 </div>
               </div>
             </td>
           </tr>
           <tr>
             <td>Custom Forward Primer<br>(Optional)</td>
-            <td>{{ form.forward_primer(class="form-control") }}</td>
+            <td>
+              {% if session %}
+                <input name="forward_primer" class="form-control" id="forward_primer" type="text" value="{{ session['forward_primer'] }}">
+              {% else %}
+                <input name="forward_primer" class="form-control" id="forward_primer" type="text" value="">
+              {% endif %}
+            </td>
           </tr>
           <tr>
             <td>Custom Reverse Primer<br>(Optional)</td>
             <td>
-              <div class="input-group">
-                {{ form.reverse_primer(type="text", class="form-control") }}
-              </div>
+              {% if session %}
+                <input name="reverse_primer" class="form-control" id="reverse_primer" type="text" value="{{ session['reverse_primer'] }}">
+              {% else %}
+                <input name="reverse_primer" class="form-control" id="reverse_primer" type="text" value="">
+              {% endif %}
             </td>
           </tr>
-          <tr>
-            <!--{{ form.nested_loop_error }}-->
-          </tr>
+
         </tbody>
       </table>
 
-      {% if form.errors.items() %}
+      {% if errors %}
         <ul class="errors">
-          {% for fieldName, errorMessages in form.errors.items() %}
-            {% for error in errorMessages %}
-              <li>{{ error }}</li>
-            {% endfor %}
+          {% for error in errors %}
+            <li>{{ error }}</li>
           {% endfor %}
         </ul>
       {% endif %}
 
-      {{ form.submit(class="btn btn-primary") }}
+      <input name="submit" class="btn btn-primary" id="submit" type="submit" value="Find Primers">
 
       <br>
       </form>
