@@ -58,7 +58,7 @@ def create_app(test_config=None):
                 errors.append(e.message)
                 return render_template('starp.html', errors=errors,
                                        sequence_data=request.form['input_data'],
-                                       nontargets=request.form['nontargets'])
+                                       nontargets=request.form['non_targets'])
             except ValueError as e:
                 errors.append(e)
                 return render_template('starp.html', errors=errors,
