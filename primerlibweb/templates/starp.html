@@ -152,12 +152,12 @@
               {% for pair in starp.upstream_pairs %}
                 <tr>
                   <td><b>AMAS 1</b></td>
-                  <td>{{ pair[0][0].__str__() }}</td>
+                  <td>{{ pair[0][0].html() | safe }}</td>
                   <td>{{ pair[0][0].span }}</td>
                 </tr>
                 <tr>
                   <td><b>AMAS 2</b></td>
-                  <td>{{ pair[0][1].__str__() }}</td>
+                  <td>{{ pair[0][1].html() | safe }}</td>
                   <td>{{ pair[0][1].span }}</td>
                 </tr>
                 <tr>
@@ -183,12 +183,12 @@
               {% for pair in starp.downstream_pairs %}
                 <tr>
                   <td><b>AMAS 1</b></td>
-                  <td>{{ pair[0][0].__str__() }}</td>
+                  <td>{{ pair[0][0].html() | safe }}</td>
                   <td>{{ pair[0][0].span }}</td>
                 </tr>
                 <tr>
                   <td><b>AMAS 2</b></td>
-                  <td>{{ pair[0][1].__str__() }}</td>
+                  <td>{{ pair[0][1].html() | safe }}</td>
                   <td>{{ pair[0][1].span }}</td>
                 </tr>
                 <tr>
