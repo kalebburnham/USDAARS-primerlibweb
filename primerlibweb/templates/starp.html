@@ -186,26 +186,30 @@
               <th>Name</th>
               <th>Sequence</th>
               <th>Span</th>
+              <th>Melting Temp</th>
 
               {% for pair in starp.upstream_pairs %}
                 <tr>
                   <td><b>AMAS 1</b></td>
                   <td>{{ pair[0][0].html() | safe }}</td>
-                  <td>{{ pair[0][0].span }}</td>
+                  <td>{{ pair[0][0].span[0] }}-{{ pair[0][0].span[1] }}</td>
+                  <td>{{ pair[0][0].tm | round(2) }} &#8451;</td>
                 </tr>
                 <tr>
                   <td><b>AMAS 2</b></td>
                   <td>{{ pair[0][1].html() | safe }}</td>
-                  <td>{{ pair[0][1].span }}</td>
+                  <td>{{ pair[0][1].span[0] }}-{{ pair[0][1].span[1] }}</td>
+                  <td>{{ pair[0][1].tm | round(2) }} &#8451;</td>
                 </tr>
                 <tr>
                   <td><b>Reverse Primer</b></td>
                   <td>{{ pair[1].sequence }}</td>
                   <td>
-                    Allele 1: {{ pair[1].allele1_span }}
+                    Allele 1: {{ pair[1].allele1_span[0] }}-{{ pair[1].allele1_span[1] }}
                     <br>
-                    Allele 2: {{ pair[1].allele2_span }}
+                    Allele 2: {{ pair[1].allele2_span[0] }}-{{ pair[1].allele2_span[1] }}
                   </td>
+                  <td>{{ pair[1].tm | round(2) }} &#8451;</td>
                 </tr>
               {% endfor %}
             </table>
@@ -222,21 +226,24 @@
                 <tr>
                   <td><b>AMAS 1</b></td>
                   <td>{{ pair[0][0].html() | safe }}</td>
-                  <td>{{ pair[0][0].span }}</td>
+                  <td>{{ pair[0][0].span[0] }}-{{ pair[0][0].span[1] }}</td>
+                  <td>{{ pair[0][0].tm | round(2) }} &#8451;</td>
                 </tr>
                 <tr>
                   <td><b>AMAS 2</b></td>
                   <td>{{ pair[0][1].html() | safe }}</td>
-                  <td>{{ pair[0][1].span }}</td>
+                  <td>{{ pair[0][1].span[0] }}-{{ pair[0][1].span[1] }}</td>
+                  <td>{{ pair[0][1].tm | round(2) }} &#8451;</td>
                 </tr>
                 <tr>
                   <td><b>Reverse Primer</b></td>
                   <td>{{ pair[1].sequence }}</td>
                   <td>
-                    Allele 1: {{ pair[1].allele1_span }}
+                    Allele 1: {{ pair[1].allele1_span[0] }}-{{ pair[1].allele1_span[1] }}
                     <br>
-                    Allele 2: {{ pair[1].allele2_span }}
+                    Allele 2: {{ pair[1].allele2_span[0] }}-{{ pair[1].allele2_span[1] }}
                   </td>
+                  <td>{{ pair[1].tm | round(2) }} &#8451;</td>
                 </tr>
               {% endfor %}
             </table>
