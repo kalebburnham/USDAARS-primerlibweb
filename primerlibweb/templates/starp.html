@@ -67,6 +67,44 @@
             alert("Allowed file extension is .xml.");
         }
     }
+
+    function formatSnpSequence() {
+      data = document.getElementById('input_data').value;
+      // Replace all carriage returns with line feeds.
+      data = data.replace(new RegExp('\r', 'g'), '\n');
+      // Remove excessive new lines.
+      data = data.replace(new RegExp('(\n){2,}', 'g'), '\n');
+      // Remove all spaces.
+      data = data.replace(' ', '');
+
+      // Regex look behinds are not supported by all browsers so care
+      // is taken to remove new lines from sequences.
+      correctFormat = '';
+      lines = data.split('\n');
+      for (var i=0; i < lines.length; i++) {
+
+        if (lines[i].startsWith('>')) {
+          // Add the allele name followed by a \n.
+          correctFormat = correctFormat + lines[i] + '\n';
+          continue;
+        }
+
+        if (lines[i+1]) {
+          if (lines[i+1].startsWith('>')) {
+            // Add new line if beginning second allele.
+            correctFormat = correctFormat + lines[i] + '\n';
+          } else {
+            // Else the sequence is just taking up multiple lines.
+            correctFormat = correctFormat + lines[i];
+          }
+        } else {
+          correctFormat = correctFormat + lines[i]
+        }
+      }
+
+      document.getElementById('input_data').value = correctFormat;
+      return true;
+    }
   </script>
 {% endblock %}
 
@@ -74,7 +112,7 @@
   {{ super() }}
   <div class="container-fluid">
     <div id="form-wrapper">
-      <form action="{{ url_for('starp_post') }}" method="post">
+      <form action="{{ url_for('starp_post') }}" method="post" onsubmit="return formatSnpSequence()">
         <div>
           <textarea name="input_data" class="form-control" id="input_data" required="" placeholder="Place SNP Sequence Here" rows="8" cols="80">{% if sequence_data %}{{ sequence_data }}{% endif %}</textarea>
         </p>
