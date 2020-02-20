@@ -37,7 +37,7 @@
       <nav class="navbar" id="navbar">
         <div class="container-fluid">
           <div class="navbar-header">
-            <h5><b>STARP Primer Design</b></h5>
+            <h5><b>Primer Design</b></h5>
             <button type="button" class="btn btn-primary btn-md" data-toggle="modal" data-target="#about_modal">About</button>
             <button type="button" class="btn btn-success btn-md" data-toggle="modal" data-target="#cite_modal">Cite</button>
             <button type="button" class="btn btn-warning btn-md" data-toggle="modal" data-target="#help_modal">Help</button>
@@ -82,28 +82,16 @@
         </div>
       </div>
 
-      <!-- Help Modal. This may need to change depending on the program. -->
       <div class="modal fade" id="help_modal" role="dialog">
+        <!-- Help Modal.-->
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
               <h4 class="modal-title">Help</h4>
             </div>
             <div class="modal-body">
-              <p>This modal will contain help and troubleshooting information.</p>
-              <h5>Non-targets</h5>
-              <p>Some sequences may have repetitive regions throughout the genome. Due to these repeats,
-              it is undesirable to create primers in them since they will have multiple binding sites
-              during the PCR process. The non-targets box should contain BLAST data in XML format of the
-              other aligned sequences throughout the same genome.</p>
-              <h5>Using custom primers</h5>
-              <p>If you already have a primer you wish to use, you may specify it as a forward or reverse primer.
-                Keep in mind that the forward primers should be oriented 5'->3' on the <u>plus</u> strand, and the reverse
-                primers should be oriented 5'->3' on the <u>minus</u> strand.</p>
-              <h5>SNP Sequences</h5>
-              <p>SNP Sequences use parentheses and dashes to designate SNPs.</p>
-              <p>For a substitution SNP, use TGGTGGGAGTA(T/G)ACGAAA</p>
-              <p>For an indel, use AAAC(C/-)CAGCGAAAAT or AAAC(-/C)CAGCGAAAAT</p>
+              {% block help_modal_info %}
+              {% endblock %}
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

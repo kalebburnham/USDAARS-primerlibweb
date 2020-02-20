@@ -120,7 +120,7 @@
         <div class="form-group">
           <div id="non_target_div">
             <div class="input-group">
-              <textarea name="non_targets" class="form-control" id="non_targets" placeholder="Paste non-target BLAST data here in XML format. For more information, click the 'Help' tab above." rows="6" cols="80">{% if nontargets %}{{ nontargets }}{% endif %}</textarea>
+              <textarea name="non_targets" class="form-control" id="non_targets" placeholder="Paste non-target BLAST data here in XML format. For more information, click the 'Help' tab above." rows="6" cols="80" >{% if nontargets %}{{ nontargets }}{% endif %}</textarea>
             </div>
             <div id="xml_upload_div">
               <input id="xml_upload_input" type="file" onchange="update_nontargets()">
@@ -258,4 +258,23 @@
     </div>
     {% endif %}
   </div>
+{% endblock %}
+
+{% block help_modal_info %}
+  <h4>Acceptable formats</h4>
+  <p>Snp sequences can be entered in one of two ways.</p>
+  <p>One way is to use square brackets to specify SNPs. For example, the following snippet denotes a substitution SNP.<br>
+  <code>GTACTGACTGAT[T/A]CGAT</code><br>
+  This notation can also denote insertion and deletion SNPs.<br>
+  <code>GTACTGACTGAT[-/A]CGAT</code><br>
+  <code>GTACTGACTGAT[T/-]CGAT</code></p>
+
+  <p>The second notation is to input two equal-length sequences.<br>
+  <code>>Allele1<br>
+        GTACTGACTGATTCGAT<br>
+        >Allele2<br>
+        GTACTGACTGAT-CGAT</code>
+
+  <h4>Non-target BLAST data</h4>
+  <p>It is possible to include non-target data in STARP. It is highly recommended to use XML data rather than the human-readable notation.</p>
 {% endblock %}

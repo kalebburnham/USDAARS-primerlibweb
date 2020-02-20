@@ -310,6 +310,7 @@
 
 {% block body %}
   {{ super() }}
+
   <div class="container-fluid">
     <div id="nestedloop_form">
       <form action="{{ url_for('run_nestedloop') }}" method="post" target="" onsubmit="return validateForm()">
@@ -589,4 +590,18 @@
     {% endif %}
 
   </div>
+{% endblock %}
+
+{% block help_modal_info %}
+  <h4>Reference Sequence</h4>
+  <p>Enter a FASTA formatted DNA sequence.</p>
+  <h4>Specificity Checking</h4>
+  <p>Some sequences may have repetitive regions throughout the genome. Due to these repeats,
+  it is undesirable to create primers in them since they will have multiple binding sites
+  during the PCR process. The non-targets box should contain BLAST data in XML format of the
+  other aligned sequences throughout the same genome.</p>
+  <h4>Using custom primers</h4>
+  <p>If you already have a primer you wish to use, you may specify it as a forward or reverse primer.
+    Keep in mind that the forward primers should be oriented 5'->3' on the <u>plus</u> strand, and the reverse
+    primers should be oriented 5'->3' on the <u>minus</u> strand.</p>
 {% endblock %}
