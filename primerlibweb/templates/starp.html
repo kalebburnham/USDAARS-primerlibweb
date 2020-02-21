@@ -112,7 +112,8 @@
   {{ super() }}
   <div class="container-fluid">
     <div id="form-wrapper">
-      <form action="{{ url_for('starp_post') }}" method="post" onsubmit="return formatSnpSequence()">
+      <!--<form action="{{ url_for('starp_post') }}" method="post" onsubmit="return formatSnpSequence()">-->
+      <form action="{{ url_for('starp_post') }}" method="post">
         <div>
           <textarea name="input_data" class="form-control" id="input_data" required="" placeholder="Place SNP Sequence Here" rows="8" cols="80">{% if sequence_data %}{{ sequence_data }}{% endif %}</textarea>
         </p>

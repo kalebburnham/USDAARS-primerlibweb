@@ -136,12 +136,14 @@ def run_nestedloop():
         return render_template('nestedloop.html', session=session,
                                errors=errors, ref_sequence=request.form['ref_sequence'],
                                nontargets=request.form['non_targets'])
+    """ For production
     except Exception as e:
         errors.append(e)
         errors.append("Something went wrong. Please try again.")
         return render_template('nestedloop.html', session=session,
                                errors=errors, ref_sequence=request.form['ref_sequence'],
                                nontargets=request.form['non_targets'])
+    """
 
     return render_template('nestedloop.html', session=session, 
                            ref_sequence=request.form['ref_sequence'],
