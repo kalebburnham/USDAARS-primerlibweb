@@ -1,0 +1,83 @@
+<style>
+
+  td {
+    padding: 0 10px;
+  }
+
+  .flexContainer {
+    display: flex;
+    padding-bottom: 20px;
+  }
+
+  .flexItem {
+    width: 100em;
+  }
+</style>
+
+<body>
+{% if starp is defined %}
+
+  {% if not starp.starp_groups %}
+    <p>No Starp primers found.</p>
+  {% endif %}
+  
+  {% for group in starp.starp_groups %}
+    {% if group.rprimers %}
+    <div class="flexContainer">
+      <div class="flexItem">
+        <table>
+          <tr>
+            <th>SNP Position</th>
+            <th>Name</th>
+            <th>Primer</th>
+            <th>Span</th>
+            <th>Melting Temp</th>
+            <th>Strand</th>
+          </tr>
+          <tr>
+            <td>{{ group.snp.position }}</td>
+            <td>Amas 1</td>
+            <td>{{ group.amas1.html() | safe }}</td>
+            <td>{{ group.amas1.span[0] }}-{{ group.amas1.span[1] }}</td>
+            <td>{{ group.amas1.tm | round(2) }} &#8451;</td>
+            <td>{{ group.amas1.strand }}</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>Amas 2</td>
+            <td>{{ group.amas2.html() | safe }}</td>
+            <td>{{ group.amas2.span[0] }}-{{ group.amas2.span[1] }}</td>
+            <td>{{ group.amas2.tm | round(2) }} &#8451;</td>
+            <td>{{ group.amas2.strand }}</td>
+          </tr>
+        </table>
+      </div>
+      <div class="flexItem">
+        <table>
+          
+          <tr>
+            <th>Reverse Primers</th>
+            <th>Allele 1 Span</th>
+            <th>Allele 2 Span</th>
+            <th>Melting Temperature</th>
+            <th>Strand</th>
+          </tr>
+            {% for primer in group.rprimers %}
+              <tr>
+                <td>{{ primer }}</td>
+                <td>{{ primer.allele1_span[0] }}-{{ primer.allele1_span[1] }}</td>
+                <td>{{ primer.allele2_span[0] }}-{{ primer.allele2_span[1] }}</td>
+                <td>{{ primer.tm | round(2) }} &#8451;</td>
+                <td>{{ primer.strand }}</td>
+              </tr>
+            {% endfor %}
+          
+        </table>
+      </div>
+    </div>
+    {% endif %}
+
+  {% endfor %}
+
+{% endif %}
+</body>

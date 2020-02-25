@@ -44,7 +44,6 @@ def starp_post():
 
         try:
             starp = Starp(request.form['input_data'], request.form['non_targets'])
-            starp.set_snp(chosen_snp_descriptor)
             starp.run()
         except StarpError as e:
             errors.append(e.message)
@@ -57,16 +56,15 @@ def starp_post():
                                    sequence_data=request.form['input_data'],
                                    nontargets=request.form['non_targets'])
 
-        return render_template('starp.html',
+        return render_template('starpresults.html',
                                sequence_data=request.form['input_data'],
                                nontargets=request.form['non_targets'],
                                starp=starp)
 
-    # User has submitted the initial data. Find the SNPS, and ask the
-    # user which one to design primers around.
+
     try:
         starp = Starp(request.form['input_data'])
-        snp_gui = starp.html()
+        starp.run()
     except StarpError as e:
         errors.append(e.message)
         return render_template('starp.html', errors=errors,
@@ -78,9 +76,7 @@ def starp_post():
                                sequence_data=request.form['input_data'],
                                nontargets=request.form['non_targets'])
 
-    return render_template('starp.html', errors=errors, snp_gui=snp_gui,
-                           sequence_data=request.form['input_data'],
-                           nontargets=request.form['non_targets'])
+    return render_template('starpresults.html', starp=starp)
 
 @app.route('/nestedloop')
 def nestedloop():
