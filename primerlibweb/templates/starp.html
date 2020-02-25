@@ -113,7 +113,7 @@
   <div class="container-fluid">
     <div id="form-wrapper">
       <!--<form action="{{ url_for('starp_post') }}" method="post" onsubmit="return formatSnpSequence()">-->
-      <form action="{{ url_for('starp_post') }}" method="post">
+      <form action="{{ url_for('starp_post') }}" method="post" target="_blank">
         <div>
           <textarea name="input_data" class="form-control" id="input_data" required="" placeholder="Place SNP Sequence Here" rows="8" cols="80" font-family="">{% if sequence_data %}{{ sequence_data }}{% endif %}</textarea>
         </p>
@@ -137,7 +137,7 @@
           </ul>
         {% endif %}
 
-        <input name="submit" class="btn btn-primary" id="submit" type="submit" value="Submit">
+        <input name="submit" class="btn btn-primary" id="submit" type="submit" value="Submit" formtarget="_blank">
         <p style="color: red;">Note that large sequences with large nontarget data may cause the server to time out.</p>
       </form>
 
