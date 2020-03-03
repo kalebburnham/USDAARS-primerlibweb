@@ -40,51 +40,56 @@ def create_app(test_config=None):
     @app.route('/starp', methods=['POST'])
     def starp_post():
         """ The user has submitted some action. If they've just clicked
-        submit, move them to the next stage to select the SNP. If they've
-        chosen the SNP, compute primers. """
+        the manual button, move them to the next stage to select the SNP.
+        If they've chosen the SNP, compute primers or that SNP. If they
+        select automatic, display primers for all SNPs."""
         errors = []
 
-        if 'snp' in request.form:
-            # User has chosen their SNP. Compute primers.
-            chosen_snp_descriptor = request.form['snp']
-            starp = Starp(request.form['input_data'], request.form['non_targets'])
-            #starp = Starp(*session['starp'].values())
-
-            try:
-                starp = Starp(request.form['input_data'], request.form['non_targets'])
-                starp.run()
-            except StarpError as e:
-                errors.append(e.message)
-                return render_template('starp.html', errors=errors,
-                                       sequence_data=request.form['input_data'],
-                                       nontargets=request.form['non_targets'])
-            except ValueError as e:
-                errors.append(e)
-                return render_template('starp.html', errors=errors,
-                                       sequence_data=request.form['input_data'],
-                                       nontargets=request.form['non_targets'])
-
-            return render_template('starpresults.html',
-                                   sequence_data=request.form['input_data'],
-                                   nontargets=request.form['non_targets'],
-                                   starp=starp)
-
-
         try:
-            starp = Starp(request.form['input_data'])
-            starp.run()
+            if 'automatic' in request.form:
+                # Automatically compute primers and return all results.
+                starp = Starp(request.form['input_data'], request.form['nontargets'])
+                starp.run()
+                return render_template('starpresults.html', starp=starp)
+            elif 'manual' in request.form:
+                # Display GUI to select primer.
+                starp = Starp(request.form['input_data'], request.form['nontargets'])
+                snp_gui = starp.html()
+                return render_template('starp.html', snp_gui=snp_gui,
+                                       input_data=request.form['input_data'],
+                                       nontargets=request.form['nontargets'])
+            elif 'snp' in request.form:
+                # User has chosen their SNP. Compute all possible primers then
+                # save those that match the chosen SNP. This does not take much
+                # extra time since the longest part is verifying binding sites
+                # of reverse primers. Once this is done, everything else is quick.
+                chosen_snp_descriptor = request.form['snp']
+                starp = Starp(request.form['input_data'], request.form['nontargets'])
+                starp.run()
+                # Remove the triples that are for other SNPs.
+                starp.triples = [triple for triple in starp.triples
+                                 if triple.snp.descriptor == chosen_snp_descriptor]
+                return render_template('starpresults.html', starp=starp)
+
         except StarpError as e:
             errors.append(e.message)
             return render_template('starp.html', errors=errors,
                                    sequence_data=request.form['input_data'],
-                                   nontargets=request.form['non_targets'])
+                                   nontargets=request.form['nontargets'])
         except ValueError as e:
             errors.append(e)
             return render_template('starp.html', errors=errors,
                                    sequence_data=request.form['input_data'],
-                                   nontargets=request.form['non_targets'])
+                                   nontargets=request.form['nontargets'])
+            
 
-        return render_template('starpresults.html', starp=starp)
+            return render_template('starpresults.html',
+                                   sequence_data=request.form['input_data'],
+                                   nontargets=request.form['nontargets'],
+                                   starp=starp)
+
+        # If something else happened, send the user back to a blank form.
+        return render_template('starp.html')
 
     @app.route('/nestedloop')
     def nestedloop():
@@ -125,7 +130,7 @@ def create_app(test_config=None):
                         num_to_return=session['num_to_return'],
                         custom_forward_primer=session['forward_primer'],
                         custom_reverse_primer=session['reverse_primer'],
-                        nontargets=request.form['non_targets'])
+                        nontargets=request.form['nontargets'])
 
             nl.run()
             #session['nl'].create_pairs()
@@ -134,24 +139,24 @@ def create_app(test_config=None):
             errors.append(e.message)
             return render_template('nestedloop.html', session=session,
                                    errors=errors, ref_sequence=request.form['ref_sequence'],
-                                   nontargets=request.form['non_targets'])
+                                   nontargets=request.form['nontargets'])
         except ValueError as e:
             errors.append(e)
             return render_template('nestedloop.html', session=session,
                                    errors=errors, ref_sequence=request.form['ref_sequence'],
-                                   nontargets=request.form['non_targets'])
+                                   nontargets=request.form['nontargets'])
         """ For production
         except Exception as e:
             errors.append(e)
             errors.append("Something went wrong. Please try again.")
             return render_template('nestedloop.html', session=session,
                                    errors=errors, ref_sequence=request.form['ref_sequence'],
-                                   nontargets=request.form['non_targets'])
+                                   nontargets=request.form['nontargets'])
         """
 
         return render_template('nestedloop.html', session=session, 
                                ref_sequence=request.form['ref_sequence'],
-                               nontargets=request.form['non_targets'],
+                               nontargets=request.form['nontargets'],
                                pairs=nl.pairs)
 
     @app.route('/downloadCSV', methods=['POST'])

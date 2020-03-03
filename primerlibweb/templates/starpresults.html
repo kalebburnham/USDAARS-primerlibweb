@@ -17,54 +17,52 @@
 <body>
 {% if starp is defined %}
 
-  {% if not starp.starp_groups %}
+  {% if not starp.triples %}
     <p>No Starp primers found.</p>
   {% endif %}
   
-  {% for group in starp.starp_groups %}
-    {% for triple in group.add_amas_tails() %}
-      <table>
-        <tr>
-          <th>SNP Position</th>
-          <th>Name</th>
-          <th>Primer</th>
-          <th>Span</th>
-          <th>Melting Temp</th>
-          <th>Strand</th>
-          <th>Reverse Primer</th>
-          <th>Allele 1 Span</th>
-          <th>Allele 2 Span</th>
-          <th>Melting Temperature</th>
-          <th>Strand</th>
-        </tr>
-        <tr>
-          <td>{{ group.snp.position }}</td>
-          <td>Amas 1</td>
-          <td>{{ triple[0].html() | safe }}</td>
-          <td>{{ triple[0].span[0] }}-{{ triple[1].span[1] }}</td>
-          <td>{{ triple[0].tm | round(2) }} &#8451;</td>
-          <td>{{ triple[0].strand }}</td>
-          <td>{{ triple[2] }}</td>
-          <td>{{ triple[2].allele1_span[0] }}-{{ triple[2].allele1_span[1] }}</td>
-          <td>{{ triple[2].allele2_span[0] }}-{{ triple[2].allele2_span[1] }}</td>
-          <td>{{ triple[2].tm | round(2) }} &#8451;</td>
-          <td>{{ triple[2].strand }}</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>Amas 2</td>
-          <td>{{ triple[1].html() | safe }}</td>
-          <td>{{ triple[1].span[0] }}-{{ triple[1].span[1] }}</td>
-          <td>{{ triple[1].tm | round(2) }} &#8451;</td>
-          <td>{{ triple[1].strand }}</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-      </table>
-    {% endfor %}
+  {% for triple in starp.triples %}
+    <table>
+      <tr>
+        <th>SNP Position</th>
+        <th>Name</th>
+        <th>Primer</th>
+        <th>Span</th>
+        <th>Melting Temp</th>
+        <th>Strand</th>
+        <th>Reverse Primer</th>
+        <th>Allele 1 Span</th>
+        <th>Allele 2 Span</th>
+        <th>Melting Temperature</th>
+        <th>Strand</th>
+      </tr>
+      <tr>
+        <td>{{ triple.snp.position }}</td>
+        <td>Amas 1</td>
+        <td>{{ triple.amas1.html() | safe }}</td>
+        <td>{{ triple.amas1.span[0] }}-{{ triple.amas1.span[1] }}</td>
+        <td>{{ triple.amas1.tm | round(2) }} &#8451;</td>
+        <td>{{ triple.amas1.strand }}</td>
+        <td>{{ triple.rprimer }}</td>
+        <td>{{ triple.rprimer.allele1_span[0] }}-{{ triple.rprimer.allele1_span[1] }}</td>
+        <td>{{ triple.rprimer.allele2_span[0] }}-{{ triple.rprimer.allele2_span[1] }}</td>
+        <td>{{ triple.rprimer.tm | round(2) }} &#8451;</td>
+        <td>{{ triple.rprimer.strand }}</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>Amas 2</td>
+        <td>{{ triple.amas2.html() | safe }}</td>
+        <td>{{ triple.amas2.span[0] }}-{{ triple.amas2.span[1] }}</td>
+        <td>{{ triple.amas2.tm | round(2) }} &#8451;</td>
+        <td>{{ triple.amas2.strand }}</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+    </table>
   {% endfor %}
 
 
