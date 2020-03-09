@@ -37,6 +37,7 @@ def starp_post():
     errors = []
 
     try:
+        print(request.form)
         if 'automatic' in request.form:
             # Automatically compute primers and return all results.
             starp = Starp(request.form['input_data'], request.form['nontargets'])
@@ -57,9 +58,9 @@ def starp_post():
             chosen_snp_descriptor = request.form['snp']
             starp = Starp(request.form['input_data'], request.form['nontargets'])
             starp.run()
-            # Remove the triples that are for other SNPs.
-            starp.triples = [triple for triple in starp.triples
-                             if triple.snp.descriptor == chosen_snp_descriptor]
+            # Remove the groups that are for other SNPs.
+            starp.starp_groups = [group for group in starp.starp_groups
+                                      if group.snp.descriptor == chosen_snp_descriptor]
             return render_template('starpresults.html', starp=starp)
 
     except StarpError as e:
