@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
+    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
     <style>
@@ -38,7 +38,7 @@
         <div class="container-fluid">
           <div class="navbar-header">
             <h5><b>Primer Design</b></h5>
-            <button type="button" class="btn btn-primary btn-md" data-toggle="modal" data-target="#about_modal">About</button>
+            <button type="button" class="btn btn-primary btn-md" id="aboutButton">About</button>
             <button type="button" class="btn btn-success btn-md" data-toggle="modal" data-target="#cite_modal">Cite</button>
             <button type="button" class="btn btn-warning btn-md" data-toggle="modal" data-target="#help_modal">Help</button>
             <a href="{{ url_for('nestedloop') }}" class="btn btn-primary">Nested Loop</a>
@@ -46,23 +46,6 @@
           </div>
         </div>
       </nav>
-
-      <!-- About Modal -->
-      <div class="modal fade" id="about_modal" role="dialog">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h4 class="modal-title">About</h4>
-            </div>
-            <div class="modal-body">
-              <p>This modal will contain information about this program.</p>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
-          </div>
-        </div>
-      </div>
 
       <!-- Citation Modal -->
       <div class="modal fade" id="cite_modal" role="dialog">
@@ -99,6 +82,17 @@
           </div>
         </div>
       </div>
+
+    <script>
+      var aboutButton = document.getElementById('aboutButton');
+
+      aboutButton.addEventListener('click', homepageRedirect);
+
+      function homepageRedirect() {
+        window.location.href = "{{ url_for('homepage') }}";
+      }
+
+    </script>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

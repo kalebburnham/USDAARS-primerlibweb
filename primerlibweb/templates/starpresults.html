@@ -1,84 +1,115 @@
-<style>
+{% extends "base.html" %}
 
-  td {
-    padding: 0 10px;
-  }
 
-  .flexContainer {
-    display: flex;
-    padding-bottom: 20px;
-  }
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for('static', filename='starpresults.css') }}">
+  <script src="{{ url_for('static', filename='starpresults.js') }}"></script>
+{% endblock %}
 
-  .flexItem {
-    width: 100em;
-  }
-</style>
 
-<body>
-{% if starp is defined %}
 
+{% block body %}
+{{ super() }}
   {% if not starp.starp_groups %}
     <p>No STARP primers found</p>
   {% endif %}
 
-  {% for group in starp.starp_groups %}
-    {% if group.rprimers %}
-    <div class="flexContainer">
-      <div class="flexItem">
-        <table>
-          <tr>
-            <th>SNP Position</th>
-            <th>Name</th>
-            <th>Primer</th>
-            <th>Span</th>
-            <th>Melting Temp</th>
-            <th>Strand</th>
-          </tr>
-          <tr>
-            <td>{{ group.snp.position }}</td>
-            <td>Amas 1</td>
-            <td>{{ group.amas1.html() | safe }}</td>
-            <td>{{ group.amas1.span[0] }}-{{ group.amas1.span[1] }}</td>
-            <td>{{ group.amas1.tm | round(2) }} &#8451;</td>
-            <td>{{ group.amas1.strand }}</td>
-          </tr>
-          <tr>
-            <td></td>
-            <td>Amas 2</td>
-            <td>{{ group.amas2.html() | safe }}</td>
-            <td>{{ group.amas2.span[0] }}-{{ group.amas2.span[1] }}</td>
-            <td>{{ group.amas2.tm | round(2) }} &#8451;</td>
-            <td>{{ group.amas2.strand }}</td>
-          </tr>
-        </table>
-      </div>
-      <div class="flexItem">
-        <table>
-          
-          <tr>
-            <th>Reverse Primers</th>
-            <th>Allele 1 Span</th>
-            <th>Allele 2 Span</th>
-            <th>Melting Temperature</th>
-            <th>Strand</th>
-          </tr>
-            {% for primer in group.rprimers %}
-              <tr>
-                <td>{{ primer }}</td>
-                <td>{{ primer.allele1_span[0] }}-{{ primer.allele1_span[1] }}</td>
-                <td>{{ primer.allele2_span[0] }}-{{ primer.allele2_span[1] }}</td>
-                <td>{{ primer.tm | round(2) }} &#8451;</td>
-                <td>{{ primer.strand }}</td>
-              </tr>
-            {% endfor %}
-          
-        </table>
-      </div>
-    </div>
-    {% endif %}
+  <div id="results">
+    {% for group in starp.starp_groups %}
+      {% if group.rprimers %}
+        <div id="group{{ loop.index }}">
+          <div id="header{{ loop.index }}" class="flexContainer">
+            <input id="toggleButton{{ loop.index }}" type="button" class="toggleButton" value='-' onclick="toggleGroupDisplay('tables{{loop.index}}', 'toggleButton{{ loop.index }}')"></button>
+            <h3>Opt {{ loop.index }}</h3>
+          </div>
+          <div id="tables{{ loop.index }}">
+            <h5>Forward Primers</h5>
+            <table class="table table-hover table-sm">
+              <thead>
+                <tr>
+                  <th scope="col">Snp #</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Primer</th>
+                  <th scope="col">Span</th>
+                  <th scope="col">Length</th>
+                  <th scope="col">Melting Temp (&#8451;)</th>
+                  <th scope="col">GC%</th>
+                  <th scope="col">Self Complementarity</th>
+                  <th scope="col">Self 3' Complementarity</th>
+                  <th scope="col">Strand</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">{{ group.snp.position }}</th>
+                  <td>Forward Primer 1</td>
+                  <td>{{ group.amas1.html() | safe }}</td>
+                  <td>{{ group.amas1.span[0] }}-{{ group.amas1.span[1] }}</td>
+                  <td>{{ group.amas1.__len__() }}</td>
+                  <td>{{ group.amas1.tm | round(2) }}</td>
+                  <td>{{ group.amas1.gc | round(2) }}</td>
+                  <td>{{ group.amas1.complementary_score | int }}</td>
+                  <td></td>
+                  <td>{{ group.amas1.strand }}</td>
+                </tr>
+                <tr>
+                  <th scope="row"></th>
+                  <td>Forward Primer 2</td>
+                  <td>{{ group.amas2.html() | safe }}</td>
+                  <td>{{ group.amas2.span[0] }}-{{ group.amas2.span[1] }}</td>
+                  <td>{{ group.amas2.__len__() }}</td>
+                  <td>{{ group.amas2.tm | round(2) }}</td>
+                  <td>{{ group.amas2.gc | round(2) }}</td>
+                  <td>{{ group.amas2.complementary_score | int }}</td>
+                  <td></td>
+                  <td>{{ group.amas2.strand }}</td>
+                </tr>
+              </tbody>
+            </table>
 
-  {% endfor %}
-
-
-{% endif %}
-</body>
+            <h5>Reverse Primers</h5>
+            <table class="table table-hover table-sm">
+              <thead>
+                <tr>
+                  <th scope="col">Snp #</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Sequence</th>
+                  <th scope="col">Allele 1 Span</th>
+                  <th scope="col">Allele 2 Span</th>
+                  <th scope="col">Length</th>
+                  <th scope="col">Melting Temp (&#8451;)</th>
+                  <th scope="col">GC%</th>
+                  <th scope="col">Self Complementarity</th>
+                  <th scope="col">Self 3' Complementarity</th>
+                  <th scope="col">Strand</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for primer in group.rprimers %}
+                <tr>
+                  {% if loop.index == 1 %}
+                    <th scope="row">{{ group.snp.position }}</th>
+                  {% else %}
+                    <th scope="row"></th>
+                  {% endif %}
+                  <td>Reverse Primer {{ loop.index }}</td>
+                  <td>{{ primer.__str__() }}</td>
+                  <td>{{ primer.allele1_span[0] }}-{{ primer.allele1_span[1] }}</td>
+                  <td>{{ primer.allele2_span[0] }}-{{ primer.allele2_span[1] }}</td>
+                  <td>{{ primer.__len__() }}</td>
+                  <td>{{ primer.tm | round(2) }}</td>
+                  <td>{{ primer.gc | round(2) }}</td>
+                  <td>{{ primer.complementary_score | int }}</td>
+                  <td></td>
+                  <td>{{ primer.strand }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+{% endblock %}

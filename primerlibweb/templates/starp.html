@@ -3,120 +3,14 @@
 {% block head %}
   {{ super() }}
   <title>STARP Primer Design</title>
-  <style>
-    #form-wrapper {
-      width: 800px;
-      left: 0;
-      right: 0;
-      margin: auto;
-      background-color: #f8faf9;
-      border-radius: 10px;
-      padding: 10px;
-      margin-top: 10px;
-    }
-
-    #input_data {
-      font-size: 12px;
-      height: 200px;
-    }
-
-    #nontargets {
-      font-size: 12px;
-      height: 200px;
-    }
-
-    #snp_picker p {
-      font-family: monospace;
-    }
-
-    #snp_picker button:hover {
-      background-color: red !important;
-      transition: background-color .75s;
-    }
-
-    #xml_upload_div {
-      float: right;
-    }
-
-    #upload_xml_button {
-        position: absolute;
-        z-index: 100;
-        top: 70%;
-        left: 78%;
-      }
-  </style>
+  <link rel="stylesheet" href="{{ url_for('static', filename='starp.css')}}">
+  <script type="text/javascript" src="{{ url_for('static', filename='starp.js') }}"></script>
 
   <script>
     $(document).ready(function() {
       $("#snp_picker").modal('show');
       $("#results").modal('show');
     });
-
-    function update_nontargets() {
-      const reader = new FileReader();
-      var file = document.getElementById('xml_upload_input').files[0]
-
-      allowedExtensions = /(\.xml)$/i;
-
-      if (allowedExtensions.exec(file.name)) {
-            reader.readAsText(file);
-            reader.onload = function(e) {
-                document.getElementById("nontargets").innerText = reader.result;
-            }
-        } else {
-            alert("Allowed file extension is .xml.");
-        }
-    }
-
-    function toggle_non_targets() {
-        var nontarget_div = document.getElementById("non_target_div")
-        var nontarget_checkbox = document.getElementById("nontargets_checkbox");
-
-        if (nontarget_checkbox.checked) {
-            nontarget_div.style.display = "block";
-        } else {
-            nontarget_div.style.display = "none";
-            document.getElementById("nontargets").value = "";
-        }
-    }
-
-    function formatSnpSequence() {
-      data = document.getElementById('input_data').value;
-      // Replace all carriage returns with line feeds.
-      data = data.replace(new RegExp('\r', 'g'), '\n');
-      // Remove excessive new lines.
-      data = data.replace(new RegExp('(\n){2,}', 'g'), '\n');
-      // Remove all spaces.
-      data = data.replace(' ', '');
-
-      // Regex look behinds are not supported by all browsers so care
-      // is taken to remove new lines from sequences.
-      correctFormat = '';
-      lines = data.split('\n');
-      for (var i=0; i < lines.length; i++) {
-
-        if (lines[i].startsWith('>')) {
-          // Add the allele name followed by a \n.
-          correctFormat = correctFormat + lines[i] + '\n';
-          continue;
-        }
-
-        if (lines[i+1]) {
-          if (lines[i+1].startsWith('>')) {
-            // Add new line if beginning second allele.
-            correctFormat = correctFormat + lines[i] + '\n';
-          } else {
-            // Else the sequence is just taking up multiple lines.
-            correctFormat = correctFormat + lines[i];
-          }
-        } else {
-          correctFormat = correctFormat + lines[i]
-        }
-      }
-
-      document.getElementById('input_data').value = correctFormat;
-      return true;
-    }
   </script>
 {% endblock %}
 
@@ -124,12 +18,12 @@
   {{ super() }}
   <div class="container-fluid">
     <div id="form-wrapper">
-      <!--<form action="{{ url_for('starp_post') }}" method="post" onsubmit="return formatSnpSequence()">-->
       <form action="{{ url_for('starp_post') }}" method="post" target="_blank">
-        <div>
+        <div id="snpSequenceInputDiv">
+          <h4>Enter SNP Sequence</h4>
+          <a href="#" onclick="clearField('input_data')">Clear</a>
           <textarea name="input_data" class="form-control" id="input_data" required="" placeholder="Place SNP Sequence Here" rows="8" cols="80" font-family="">{% if input_data %}{{ input_data }}{% endif %}</textarea>
-        </p>
-
+        </div>
         <span>Select Locus</span>
         <input name="automatic" class="btn btn-primary" id="automatic_button" type="submit" value="Automatic" formtarget="_blank">
         <input name="manual" class="btn btn-primary" id="manual_button" type="submit" value="Manual" formtarget="_blank">
@@ -138,13 +32,13 @@
         <div class="form-group">
           Specificity Checking (Recommended) <input type="checkbox" id="nontargets_checkbox" onclick="toggle_non_targets()" >
           <div id="non_target_div" style="display: none;">
+            <a href="#" onclick="clearField('nontargets')">Clear</a>
             <div class="input-group">
               <textarea name="nontargets" class="form-control" id="nontargets" placeholder="Paste non-target BLAST data here in XML format. For more information, click the 'Help' tab above." rows="6" cols="80" onchange="validateForm()">{% if nontargets %}{{ nontargets }}{% endif %}</textarea>
             </div>
-            <div id="xml_upload_div">
-              <input id="xml_upload_input" type="file" onchange="update_nontargets()">
-            </div>
+              <input id="xml_upload_input" style="float:right;" type="file" onchange="update_nontargets()">
           </div>
+        
         </div>
 
         {% if errors %}
@@ -274,6 +168,9 @@
     </div>
     {% endif %}
   </div>
+
+  
+
 {% endblock %}
 
 {% block help_modal_info %}

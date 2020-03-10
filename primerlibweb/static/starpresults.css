@@ -1,0 +1,42 @@
+body {
+    font-family: helvetica, sans-serif;
+}
+
+td {
+    padding: 0 10px;
+}
+
+td, th {
+    font-size: 14px;
+}
+
+.flexContainer {
+    display: flex;
+    padding-bottom: 20px;
+}
+
+.flexItem {
+    width: 100em;
+}
+
+.toggleButton {
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 8px;
+    height: 50%;
+    margin-bottom: auto;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    border-radius: 3px;
+}
+
+#results {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #f8faf9;
+    border-radius: 10px;
+    padding: 10px;
+    margin-top: 10px;
+}

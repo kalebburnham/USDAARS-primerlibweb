@@ -29,7 +29,11 @@ def create_app(test_config=None):
     @app.route('/')
     def go_to_homepage():
         """ By default, send the user to the starp page. """
-        return redirect(url_for('starp'))
+        return redirect(url_for('homepage'))
+
+    @app.route('/homepage')
+    def homepage():
+        return render_template('/homepage.html')
 
     @app.route('/starp')
     def starp():

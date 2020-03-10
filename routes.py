@@ -12,7 +12,7 @@ from nestedloop.exceptions import NestedLoopError
 
 from flask import Flask, Response, render_template, redirect, session, request, jsonify, url_for
 
-app = Flask(__name__, template_folder='primerlibweb/templates')
+app = Flask(__name__, template_folder='primerlibweb/templates', static_folder='primerlibweb/static')
 app.secret_key = 'OD jhfSD :FHFIOKL: NFEWnk448299'
 
 SESSION_TYPE = 'filesystem'
@@ -21,7 +21,11 @@ app.config.from_object(__name__)
 @app.route('/')
 def go_to_homepage():
     """ By default, send the user to the starp page. """
-    return redirect(url_for('starp'))
+    return redirect(url_for('homepage'))
+
+@app.route('/homepage')
+def homepage():
+    return render_template('/homepage.html')
 
 @app.route('/starp')
 def starp():
@@ -73,12 +77,6 @@ def starp_post():
         return render_template('starp.html', errors=errors,
                                sequence_data=request.form['input_data'],
                                nontargets=request.form['nontargets'])
-        
-
-        return render_template('starpresults.html',
-                               sequence_data=request.form['input_data'],
-                               nontargets=request.form['nontargets'],
-                               starp=starp)
 
     # If something else happened, send the user back to a blank form.
     return render_template('starp.html')

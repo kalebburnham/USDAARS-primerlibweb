@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block head %}
+    {{ super() }}
+
+    <style>
+        #info-wrapper {
+            width: 800px;
+            left: 0;
+            right: 0;
+            margin: auto;
+            background-color: #f8faf9;
+            border-radius: 10px;
+            padding: 10px;
+            margin-top: 10px;
+        }
+    </style>
+
+{% endblock %}
+
+{% block body %}
+{{ super() }}
+
+<div class="container-fluid">
+    <div id="info-wrapper">
+        <p>StarPrimer generates primers for STARP genotyping and specific amplification at various regions including highly repetitive sequences across all biological organisms. This program can be employed freely, but it will be expected that appropriate credit is given to the authors when using the sources and generated data.
+        </p>
+
+        <p>If detailed information is needed, please download the papers: StarPrimer [link], STARP [link], and specific amplification [link]
+        </p>
+
+        <p>Select your purpose:</p>
+
+        <button type="button" value="STARP Genotyping" id="starpButton" onclick='starpRedirect()'>STARP Genotyping</button>
+        <button type="button" value="Specific Amplification" id="nestedloopButton" onclick='nestedloopRedirect()'>Specific Amplification</button>
+    </div>
+
+
+</div>
+
+<script>
+    function starpRedirect() {
+        window.location.href="{{ url_for('starp') }}";
+    }
+
+    function nestedloopRedirect() {
+        window.location.href="{{ url_for('nestedloop') }}";
+    }
+</script>
+
+{% endblock %}

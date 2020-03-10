@@ -1,0 +1,37 @@
+#form-wrapper {
+    width: 800px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    background-color: #f8faf9;
+    border-radius: 10px;
+    padding: 10px;
+    margin-top: 10px;
+}
+
+#input_data {
+    font-size: 12px;
+    height: 200px;
+}
+
+#nontargets {
+    font-size: 12px;
+    height: 200px;
+}
+
+#snp_picker p {
+    font-family: monospace;
+}
+
+#snp_picker button:hover {
+    background-color: red !important;
+    transition: background-color .75s;
+}
+
+#snpSequenceInputDiv {
+    margin-bottom: 1em;
+}
+
+#upload_xml_button {
+    float:right;
+}

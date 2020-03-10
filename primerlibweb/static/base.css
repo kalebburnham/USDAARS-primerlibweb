@@ -1,0 +1,22 @@
+body {
+    font-family: helvetica, sans-serif;
+    background-color: #B2BABC;
+}
+
+.mainContent {
+    width: 800px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    background-color: #f8faf9;
+    border-radius: 10px;
+    padding: 10px;
+    margin-top: 10px;
+}
+
+#navbar {
+    background-color: #F8FAF9;
+    border-radius: 10px;
+    height: 120px;
+    margin: 10px;
+}
