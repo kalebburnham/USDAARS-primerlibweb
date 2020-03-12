@@ -41,7 +41,6 @@ def starp_post():
     errors = []
 
     try:
-        print(request.form)
         if 'automatic' in request.form:
             # Automatically compute primers and return all results.
             starp = Starp(request.form['input_data'], request.form['nontargets'])

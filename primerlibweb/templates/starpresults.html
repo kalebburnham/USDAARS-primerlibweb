@@ -11,11 +11,10 @@
 
 {% block body %}
 {{ super() }}
-  {% if not starp.starp_groups %}
-    <p>No STARP primers found</p>
-  {% endif %}
-
   <div id="results">
+    {% if not starp.starp_groups %}
+      <p>No STARP primers found</p>
+    {% endif %}
     {% for group in starp.starp_groups %}
       {% if group.rprimers %}
         <div id="group{{ loop.index }}">
