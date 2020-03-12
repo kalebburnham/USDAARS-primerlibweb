@@ -1,3 +1,7 @@
+textarea {
+    font-family: courier;
+}
+
 #form-wrapper {
     width: 800px;
     left: 0;

@@ -22,7 +22,7 @@
         <div id="snpSequenceInputDiv">
           <h4>Enter SNP Sequence</h4>
           <a href="#" onclick="clearField('input_data')">Clear</a>
-          <textarea name="input_data" class="form-control" id="input_data" required="" placeholder="Place SNP Sequence Here" rows="8" cols="80" font-family="">{% if input_data %}{{ input_data }}{% endif %}</textarea>
+          <textarea name="input_data" class="form-control" id="input_data" required="" placeholder="Place SNP Sequence Here" rows="8" cols="80">{% if input_data %}{{ input_data }}{% endif %}</textarea>
         </div>
         <span>Select Locus</span>
         <input name="automatic" class="btn btn-primary" id="automatic_button" type="submit" value="Automatic" formtarget="_blank">
