@@ -325,8 +325,8 @@
       </div>
 
       <div class="form-group">
-        Specificity Checking (Recommended) <input type="checkbox" id="nontargets_checkbox" onclick="toggle_nontargets()" >
-        <div id="nontargets_div" style="display: none;">
+        Specificity Checking (Recommended) <input type="checkbox" id="nontarget_checkbox" onclick="toggle_nontargets()" >
+        <div id="nontarget_div" style="display: none;">
           <a href="#blast">Need to perform a BLAST?</a>
           <div class="input-group">
             <textarea name="nontargets" class="form-control" id="nontargets" placeholder="Paste non-target BLAST data here in XML format. For more information, click the 'Help' tab above." rows="6" cols="80" onchange="validateForm()">{% if nontargets %}{{ nontargets }}{% endif %}</textarea>
