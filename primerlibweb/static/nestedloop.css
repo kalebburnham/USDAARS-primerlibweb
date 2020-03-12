@@ -1,0 +1,77 @@
+input:valid {
+    color: green;
+}
+
+/* Unmatched */
+input:invalid {
+    color: red;
+}
+
+#nestedloop_form {
+  width: 800px;
+  left: 0;
+  right: 0;
+  margin: auto;
+  background-color: #f8faf9;
+  border-radius: 10px;
+  padding: 10px;
+  margin-top: 10px;
+}
+
+#ref_sequence {
+  font-size: 12px;
+  height: 200px;
+}
+
+#nontargets {
+  font-size: 12px;
+  height: 200px;
+}
+
+#fasta_upload_div, #xml_upload_div {
+  float: right;
+}
+
+#blast {
+  width: 800px;
+  background-color: #f8faf9;
+  left: 0;
+  right: 0;
+  margin: auto;
+  margin-top: 10px;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+#embedded_blast {
+  width: 100%;
+  border: none;
+  margin-top: 10px;
+}
+
+#output_table {
+  background-color: #f8faf9;
+  border-radius: 10px;
+  padding: 10px;
+  left: 0;
+  right: 0;
+  margin: auto;
+  margin-top: 10px;
+}
+
+#navigation {
+  padding: 10px;
+  background-color: #f8faf9;
+  left: 0;
+  right: 0;
+  margin: auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  height: 60px;
+  border-radius: 10px;
+  width: 100%;
+}
+
+#fTo, #fFrom, #rFrom, #rTo, #ampliconLengthMin, #ampliconLengthMax, #num_to_return, #tmMin, #tmOpt, #tmMax {
+  width: 5em;
+}
