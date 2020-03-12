@@ -1,6 +1,27 @@
 The file structure is based off of
 https://flask.palletsprojects.com/en/1.1.x/tutorial/layout/
 
+* `Procfile` - Tells Heroku what kind of application to run. Heroku is being used as the internal testing platform.
+* `requirements.txt` - Dependencies for this web application.
+* `routes.py` - Flask testing server.
+* `runtime.txt` - What version of Python to use.
+* `setup.py` - Used by Pip during install.
+* `primerlibweb/templates/` - Jinja2 templates for the views.
+* `primerlibweb/static/` - JavaScript and CSS for the views.
+
+Environments
+===========================
+There is a testing environment given by `routes.py` and the production
+environment given by `primerlibweb/__init__.py`. To run the testing
+environment, just run `python routes.py` or possibly `python3 routes.py`
+depending on your installation. Any changes made to the script or
+any templates will cause the server to restart to reflect the new
+changes.
+
+To move changes from testing to production, copy everything except
+the imports from `routes.py` to the `create_app` method in
+`primerlibweb/__init__.py`.
+
 Installation Instructions
 ===========================
 
