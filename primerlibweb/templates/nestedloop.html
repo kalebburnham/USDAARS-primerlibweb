@@ -29,7 +29,7 @@
         height: 200px;
       }
 
-      #non_targets {
+      #nontargets {
         font-size: 12px;
         height: 200px;
       }
@@ -94,15 +94,15 @@
       $("#output").modal('show');
     });
 
-    function toggle_non_targets() {
-        var nontarget_div = document.getElementById("non_target_div")
-        var nontarget_checkbox = document.getElementById("nontargets_checkbox");
+    function toggle_nontargets() {
+        var nontarget_div = document.getElementById("nontarget_div")
+        var nontarget_checkbox = document.getElementById("nontarget_checkbox");
 
         if (nontarget_checkbox.checked) {
             nontarget_div.style.display = "block";
         } else {
             nontarget_div.style.display = "none";
-            document.getElementById("non_targets").innerText = "";
+            document.getElementById("nontargets").innerText = "";
         }
     }
 
@@ -159,7 +159,7 @@
         if (allowedExtensions.exec(file.name)) {
             reader.readAsText(file);
             reader.onload = function(e) {
-                document.getElementById("non_targets").innerText = reader.result;
+                document.getElementById("nontargets").innerText = reader.result;
             }
         } else {
             alert("Allowed file extension is XML.");
@@ -217,7 +217,7 @@
       if (allowedExtensions.exec(file.name)) {
         reader.readAsText(file);
         reader.onload = function(e) {
-          document.getElementById("non_targets").innerText = reader.result;
+          document.getElementById("nontargets").innerText = reader.result;
         }
       } else {
         alert("Allowed file extension is .xml.");
@@ -325,11 +325,11 @@
       </div>
 
       <div class="form-group">
-        Specificity Checking (Recommended) <input type="checkbox" id="nontargets_checkbox" onclick="toggle_non_targets()" >
-        <div id="non_target_div" style="display: none;">
+        Specificity Checking (Recommended) <input type="checkbox" id="nontargets_checkbox" onclick="toggle_nontargets()" >
+        <div id="nontargets_div" style="display: none;">
           <a href="#blast">Need to perform a BLAST?</a>
           <div class="input-group">
-            <textarea name="non_targets" class="form-control" id="non_targets" placeholder="Paste non-target BLAST data here in XML format. For more information, click the 'Help' tab above." rows="6" cols="80" onchange="validateForm()">{% if nontargets %}{{ nontargets }}{% endif %}</textarea>
+            <textarea name="nontargets" class="form-control" id="nontargets" placeholder="Paste non-target BLAST data here in XML format. For more information, click the 'Help' tab above." rows="6" cols="80" onchange="validateForm()">{% if nontargets %}{{ nontargets }}{% endif %}</textarea>
           </div>
           <div id="xml_upload_div">
             <input id="xml_upload_input" type="file" onchange="update_nontargets()">

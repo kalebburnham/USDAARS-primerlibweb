@@ -15,7 +15,6 @@ from flask import Flask, Response, render_template, redirect, session, request, 
 app = Flask(__name__, template_folder='primerlibweb/templates', static_folder='primerlibweb/static')
 app.secret_key = 'OD jhfSD :FHFIOKL: NFEWnk448299'
 
-SESSION_TYPE = 'filesystem'
 app.config.from_object(__name__)
 
 @app.route('/')
