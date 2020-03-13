@@ -90,15 +90,6 @@ function populate_with_length(id) {
     }
 }
 
-function toggle_pcr_condition_display(id) {
-    element = document.getElementById(id);
-    if (element.style.display == 'none') {
-        element.style.display = 'block';
-    } else {
-        element.style.display = 'none';
-    }
-}
-
 function update_reference_sequence() {
   const reader = new FileReader();
   var file = document.getElementById('fasta_upload_input').files[0]

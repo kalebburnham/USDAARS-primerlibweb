@@ -1,0 +1,27 @@
+#navigation {
+    padding: 10px;
+    background-color: #f8faf9;
+    left: 0;
+    right: 0;
+    margin: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    height: 60px;
+    border-radius: 10px;
+    width: 100%;
+  }
+
+#resultsTable {
+    background-color: #f8faf9;
+    border-radius: 10px;
+    padding: 10px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    margin-top: 10px;
+    
+    width: 80%;
+    background-color: #f8faf9;
+    border-radius: 10px;
+    padding: 10px;
+  }

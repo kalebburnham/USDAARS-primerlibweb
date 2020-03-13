@@ -142,7 +142,7 @@ def run_nestedloop():
                                nontargets=request.form['nontargets'])
     """
 
-    return render_template('nestedloop.html', session=session, 
+    return render_template('nestedloopresults.html', session=session, 
                            ref_sequence=request.form['ref_sequence'],
                            nontargets=request.form['nontargets'],
                            pairs=nl.pairs)

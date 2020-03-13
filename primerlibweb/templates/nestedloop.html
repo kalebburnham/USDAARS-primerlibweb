@@ -20,7 +20,7 @@
 
   <div class="container-fluid">
     <div id="nestedloop_form">
-      <form action="{{ url_for('run_nestedloop') }}" method="post" target="" onsubmit="return validateForm()">
+      <form action="{{ url_for('run_nestedloop') }}" method="post" target="_blank" onsubmit="return validateForm()">
 
       <div class="form-group">
         <div class="input-group">
@@ -222,80 +222,6 @@
       <iframe src="" height="0" id="embedded_blast"></iframe>
     </div>
     <!-- End Embedded Blast -->
-
-    <!-- This modal will automatically be opened if data is returned with the
-      webpage. It contains the Primer Report table. -->
-    {% if pairs is defined %}
-    <div class="modal fade" id="output" role="dialog">
-      <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h2>Nested Loop Primer Report</h2>
-          </div>
-          <div class="modal-body">
-            <div id="output_table">
-              <table class="table table-striped table-bordered table-sm">
-                <thead>
-                  <th scope="col">#</th>
-                  <th scope="col">Sequence (5'->3')</th>
-                  <th scope="col">Strand</th>
-                  <th scope="col">Start</th>
-                  <th scope="col">End</th>
-                  <th scope="col">Amplicon Length</th>
-                  <th scope="col">Melting Temp.</th>
-                  <th scope="col">GC Content</th>
-                  <th scope="col">Recommended PCR Conditions</th>
-                </thead>
-
-                <tbody>
-                {% for pair in pairs %}
-                <tr>
-                  <th scope="row">Forward Primer {{ loop.index }}<br>
-                                        Reverse Primer {{ loop.index }}</th>
-                  <td>{{ pair.forward_primer.sequence }}<br>
-                      {{ pair.reverse_primer.sequence }}
-                  </td>
-                  <td>Plus<br>Minus</td>
-                  <td>{{ pair.forward_primer.start + 1 }}<br>
-                      {{ pair.reverse_primer.start + 1 }}</td>
-                  <td>{{ pair.forward_primer.end }}<br>
-                      {{ pair.reverse_primer.end }}</td>
-                  <td>{{ pair.distance }}</td>
-                  <td>{{ pair.forward_primer.tm|round(2) }}<br>
-                      {{ pair.reverse_primer.tm|round(2) }}</td>
-                  <td>{{ (pair.forward_primer.gc*100)|round(1) }}%<br>
-                      {{ (pair.reverse_primer.gc*100)|round(1) }}%</td>
-                  <td style="width: 150px;"><button onclick="toggle_pcr_condition_display('pcr_conditions{{loop.index}}')">>></button>
-                    <div id="pcr_conditions{{loop.index}}" class="container" style="display: none;">
-                      <p><b>Additive</b></p>
-                      {{ pair.additive().additive }} &#181;l / 15 &#181;l
-                      <p><b>Loop 2 program:</b><pre>{{ pair.additive().pcr_temperatures }}</pre></p>
-                      <p><b>Loop 2 cycle number:</b></p>
-                      <p>N={{ pair.additive().n }}</p>
-                    </div>
-                  </td>
-                </tr>
-                {% endfor %}
-                </tbody>
-              </table>
-              <div id="navigation">
-                <form action="{{ url_for('nestedloop') }}">
-                  <button style="float: left;" class="btn btn-info">Perform a New Search</button>
-                </form>
-                <form action="{{ url_for('download_csv') }}" method="post" target="_blank" >
-                  <button style="float: right;" class="btn btn-info">Download CSV File</button>
-                </form>
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    {% endif %}
-
   </div>
 {% endblock %}
 
